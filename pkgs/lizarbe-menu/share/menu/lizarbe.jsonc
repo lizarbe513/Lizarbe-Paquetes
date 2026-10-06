@@ -1,115 +1,19 @@
 {
   "lizarbe": {
     "icon": "\udb82\udcc6",
-    "label": "Lizarbe",
+    "label": "Centro Lizarbe",
     "aliases": [
       "lizarbe"
-    ]
+    ],
+    "description": "Tema, identidad, software recomendado y actualizaciones",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe lizarbe-tui"
   },
-  "lizarbe.pantallas": {
-    "icon": "\udb80\udf79",
-    "label": "Pantallas",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section pantallas",
-    "description": "Resoluci\u00f3n, escala, posici\u00f3n de monitores"
+  "system": {
+    "when": "false",
+    "aliases": []
   },
-  "lizarbe.atajos": {
-    "icon": "\udb80\udf0c",
-    "label": "Atajos de teclado",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section atajos",
-    "description": "Ver, cambiar y crear atajos"
-  },
-  "lizarbe.teclado": {
-    "icon": "\udb80\udf7d",
-    "label": "Teclado y mouse",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section teclado",
-    "description": "Idioma del teclado, mouse y touchpad"
-  },
-  "lizarbe.luz": {
-    "icon": "\udb81\udd94",
-    "label": "Luz nocturna",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section luz",
-    "description": "Filtro de luz azul"
-  },
-  "lizarbe.texto": {
-    "icon": "\udb81\uddca",
-    "label": "Atajos de texto",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section texto",
-    "description": "Escribir s\u00edmbolos y frases con una secuencia"
-  },
-  "lizarbe.apariencia": {
-    "icon": "\udb81\uddb2",
-    "label": "Ventanas",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section apariencia",
-    "description": "Bordes, espacios, transparencia y animaciones"
-  },
-  "lizarbe.temas": {
-    "icon": "\udb80\udfd8",
-    "label": "Mis temas",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section temas",
-    "description": "Crear y editar temas de color"
-  },
-  "lizarbe.widgets": {
-    "icon": "\udb81\udd6e",
-    "label": "Widgets y barra",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets",
-    "description": "Barra superior y widgets"
-  },
-  "lizarbe.plugins": {
-    "icon": "\udb81\udc31",
-    "label": "Plugins",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets --section plugins",
-    "description": "Agregar, clonar, actualizar y quitar plugins"
-  },
-  "lizarbe.centro": {
-    "icon": "\udb82\udcc6",
-    "label": "Centro Lizarbe",
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe lizarbe-tui",
-    "description": "Identidad, software y actualizaciones"
-  },
-  "lizarbe.avanzado": {
-    "icon": "\udb80\ude2e",
-    "label": "Avanzado",
-    "description": "Editar los archivos de configuraci\u00f3n a mano"
-  },
-  "lizarbe.avanzado.looknfeel": {
-    "icon": "\udb80\ude2e",
-    "label": "looknfeel.lua",
-    "when": "[[ -f ~/.config/hypr/looknfeel.lua ]]",
-    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/looknfeel.lua\""
-  },
-  "lizarbe.avanzado.monitors": {
-    "icon": "\udb80\ude2e",
-    "label": "monitors.lua",
-    "when": "[[ -f ~/.config/hypr/monitors.lua ]]",
-    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/monitors.lua\""
-  },
-  "lizarbe.avanzado.bindings": {
-    "icon": "\udb80\ude2e",
-    "label": "bindings.lua",
-    "when": "[[ -f ~/.config/hypr/bindings.lua ]]",
-    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/bindings.lua\""
-  },
-  "lizarbe.avanzado.input": {
-    "icon": "\udb80\ude2e",
-    "label": "input.lua",
-    "when": "[[ -f ~/.config/hypr/input.lua ]]",
-    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/input.lua\""
-  },
-  "lizarbe.avanzado.hyprland": {
-    "icon": "\udb80\ude2e",
-    "label": "hyprland.lua",
-    "when": "[[ -f ~/.config/hypr/hyprland.lua ]]",
-    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/hyprland.lua\""
-  },
-  "lizarbe.avanzado.hyprsunset": {
-    "icon": "\udb80\ude2e",
-    "label": "hyprsunset.conf",
-    "action": "omarchy-launch-config-editor ~/.config/hypr/hyprsunset.conf && omarchy-restart-hyprsunset"
-  },
-  "lizarbe.avanzado.xcompose": {
-    "icon": "\udb80\ude2e",
-    "label": ".XCompose",
-    "action": "omarchy-launch-config-editor ~/.XCompose && omarchy-restart-xcompose"
+  "power": {
+    "like": "system"
   },
   "setup.monitors": {
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section pantallas"
@@ -120,18 +24,105 @@
   "setup.input": {
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section teclado"
   },
+  "setup.nightlight": {
+    "icon": "\udb81\udd94",
+    "label": "Luz nocturna",
+    "description": "Filtro de luz azul",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section luz"
+  },
+  "setup.compose": {
+    "icon": "\udb81\uddca",
+    "label": "Atajos de texto",
+    "description": "Escribir s\u00edmbolos y frases con una secuencia",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section texto"
+  },
+  "setup.network": {
+    "when": "false",
+    "aliases": []
+  },
+  "setup.default": {
+    "when": "false",
+    "aliases": []
+  },
+  "setup.plugin": {
+    "when": "false",
+    "aliases": []
+  },
+  "setup.security": {
+    "when": "false",
+    "aliases": []
+  },
+  "setup.config": {
+    "when": "false",
+    "aliases": []
+  },
+  "setup.direct-boot": {
+    "when": "false",
+    "aliases": []
+  },
+  "setup.reset": {
+    "when": "false",
+    "aliases": []
+  },
+  "setup.lz-network": {
+    "like": "setup.network"
+  },
+  "setup.lz-default": {
+    "like": "setup.default"
+  },
+  "setup.lz-plugin": {
+    "like": "setup.plugin",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets --section plugins"
+  },
+  "setup.lz-security": {
+    "like": "setup.security"
+  },
+  "setup.lz-config": {
+    "like": "setup.config"
+  },
+  "setup.lz-direct-boot": {
+    "like": "setup.direct-boot"
+  },
+  "setup.lz-reset": {
+    "like": "setup.reset"
+  },
+  "setup.config.looknfeel": {
+    "icon": "\udb80\ude2e",
+    "label": "looknfeel.lua",
+    "when": "[[ -f ~/.config/hypr/looknfeel.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/looknfeel.lua\""
+  },
+  "setup.config.monitors": {
+    "icon": "\udb80\ude2e",
+    "label": "monitors.lua",
+    "when": "[[ -f ~/.config/hypr/monitors.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/monitors.lua\""
+  },
+  "setup.config.bindings": {
+    "icon": "\udb80\ude2e",
+    "label": "bindings.lua",
+    "when": "[[ -f ~/.config/hypr/bindings.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/bindings.lua\""
+  },
+  "setup.config.input": {
+    "icon": "\udb80\ude2e",
+    "label": "input.lua",
+    "when": "[[ -f ~/.config/hypr/input.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/input.lua\""
+  },
   "style.hyprland": {
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section apariencia"
   },
-  "setup.plugin": {
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets --section plugins"
+  "style.temas": {
+    "icon": "\udb80\udfd8",
+    "label": "Mis temas",
+    "description": "Crear y editar temas de color",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section temas"
   },
-  "system": {
-    "when": "false"
-  },
-  "power": {
-    "icon": "\uf011",
-    "label": "System",
-    "target": "system"
+  "style.widgets": {
+    "icon": "\udb81\udd6e",
+    "label": "Widgets y barra",
+    "description": "Barra superior y widgets",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets"
   }
 }

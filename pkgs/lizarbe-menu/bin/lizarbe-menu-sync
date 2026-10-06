@@ -32,12 +32,17 @@ LEGACY_IDS = [
     "setup.config.quickshell",
     "setup.widgets",
     "setup.escritorio",
-    "setup.nightlight",
-    "setup.compose",
-    "setup.config.looknfeel",
-    "setup.config.monitors",
-    "setup.config.bindings",
-    "setup.config.input",
+    "lizarbe.pantallas",
+    "lizarbe.atajos",
+    "lizarbe.teclado",
+    "lizarbe.luz",
+    "lizarbe.texto",
+    "lizarbe.apariencia",
+    "lizarbe.temas",
+    "lizarbe.widgets",
+    "lizarbe.plugins",
+    "lizarbe.centro",
+    "lizarbe.avanzado",
 ]
 # Campos que una entrada que reutiliza un id de Omarchy hereda del original si no los define
 # (Omarchy reemplaza todos los campos al fusionar, así que si no se heredan quedan vacíos).
@@ -63,12 +68,31 @@ def load_defaults(path: str) -> dict:
         return {}
 
 
+LIKE_FIELDS = ("icon", "label", "aliases", "action", "when", "checked")
+
+
 def inherit_defaults(entries: dict, defaults: dict) -> dict:
+    """Completa las entradas con datos del menú de Omarchy.
+
+    - Una entrada que reutiliza un id de Omarchy hereda icon/label/aliases si no los define.
+    - `"like": "<id>"` crea una copia de otra entrada de Omarchy bajo un id nuevo (para
+      cambiar su posición: el original se oculta con `"when": "false"`). Si el original es
+      un submenú, la copia lo abre con `target`.
+    """
     out = {}
     for key, val in entries.items():
-        base = defaults.get(key)
-        if isinstance(base, dict) and "target" not in val:
-            val = {**{f: base[f] for f in INHERIT if f in base and f not in val}, **val}
+        like = val.get("like")
+        if like:
+            base = defaults.get(like, {})
+            new = {f: base[f] for f in LIKE_FIELDS if f in base and f not in val}
+            new.update({k: v for k, v in val.items() if k != "like"})
+            if "action" not in new and "target" not in new:
+                new["target"] = like
+            val = new
+        else:
+            base = defaults.get(key)
+            if isinstance(base, dict) and "target" not in val:
+                val = {**{f: base[f] for f in INHERIT if f in base and f not in val}, **val}
         out[key] = val
     return out
 
