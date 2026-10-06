@@ -160,19 +160,40 @@ check_hooks() {
   done
 }
 
-# ---------------------------------------------------------------- restos de Meca
+# ---------------------------------------------------------------- restos de versiones anteriores
 check_legacy() {
   say "Restos de versiones anteriores"
   local found=0 f
+  # Meca y copias de desarrollo que ahora trae un paquete (ya están en /usr/bin).
   for f in "$HOME/.local/bin/meca" "$HOME/.local/bin/meca-hyprconfig" "$HOME/.local/bin/meca-qs" \
+    "$HOME/.local/bin/lizarbe-escritorio" "$HOME/.local/bin/lizarbe-widgets" "$HOME/.local/bin/lizarbe-hypr-rules" \
     "$HOME/.local/share/applications/meca.desktop" "$HOME/.local/share/applications/meca-qs.desktop" \
+    "$HOME/.local/share/applications/lizarbe-escritorio.desktop" "$HOME/.local/share/applications/lizarbe-widgets.desktop" \
     "$HOOKS_DIR/post-update.d/99-meca-hyprconfig.sh"; do
+    # Solo si el paquete ya trae el programa (no se quita lo único que hay).
+    case $f in
+      */.local/bin/lizarbe-escritorio | */.local/bin/lizarbe-widgets)
+        [[ -x /usr/bin/${f##*/} ]] || continue ;;
+      */.local/share/applications/lizarbe-escritorio.desktop | */.local/share/applications/lizarbe-widgets.desktop)
+        [[ -f /usr/share/applications/${f##*/} ]] || continue ;;
+    esac
     if [[ -e $f || -L $f ]]; then
       found=1
-      problem "resto de Meca: $f" rm -f "$f"
+      problem "resto de una versión anterior: $f" rm -f "$f"
     fi
   done
-  [[ $found -eq 0 ]] && ok "sin restos de Meca"
+  # Enlaces de temas e iconos que apuntan a la carpeta /opt del instalador viejo:
+  # los temas y los iconos ya están en /usr/share (paquete lizarbe-tema).
+  if [[ -d /usr/share/omarchy/themes/lizarbe && -d /usr/share/icons/Lizarbe-Red ]]; then
+    for f in "$HOME/.config/omarchy/themes/lizarbe" "$HOME/.config/omarchy/themes/lizarbe-light" \
+      "$HOME/.local/share/icons/Lizarbe-Red" "$HOME/.icons/Lizarbe-Red"; do
+      if [[ -L $f && "$(readlink "$f")" == /opt/Lizarbe-Omarchy-Theme/* ]]; then
+        found=1
+        problem "enlace al instalador viejo: $f" rm -f "$f"
+      fi
+    done
+  fi
+  [[ $found -eq 0 ]] && ok "sin restos"
 }
 
 # ---------------------------------------------------------------- archivos de Omarchy
