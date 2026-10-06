@@ -27,6 +27,11 @@ for f in *.pkg.tar.zst; do
 done
 rm -f lizarbe.db* lizarbe.files*
 repo-add --quiet --sign --key "$KEY" --new lizarbe.db.tar.gz ./*.pkg.tar.zst
+# Quitar los paquetes viejos que la base de datos ya no lista.
+mapfile -t vigentes < <(tar -xzOf lizarbe.db.tar.gz --wildcards '*/desc' | awk '/^%FILENAME%$/ {getline; print}')
+for f in *.pkg.tar.zst; do
+  [[ " ${vigentes[*]} " == *" $f "* ]] || rm -f "$f" "$f.sig"
+done
 # GitHub Pages no sigue enlaces simbólicos: se dejan copias.
 for n in db files; do
   rm -f "lizarbe.$n" "lizarbe.$n.sig"

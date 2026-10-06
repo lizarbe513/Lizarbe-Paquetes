@@ -27,7 +27,22 @@ import time
 START = "// >>> lizarbe (gestionado)"
 END = "// <<< lizarbe"
 # Entradas de versiones anteriores que ya no existen.
-LEGACY_IDS = ["setup.config.meca", "setup.config.quickshell"]
+LEGACY_IDS = [
+    "setup.config.meca",
+    "setup.config.quickshell",
+    "setup.widgets",
+    "setup.escritorio",
+    "setup.nightlight",
+    "setup.compose",
+    "setup.config.looknfeel",
+    "setup.config.monitors",
+    "setup.config.bindings",
+    "setup.config.input",
+]
+# Campos que una entrada que reutiliza un id de Omarchy hereda del original si no los define
+# (Omarchy reemplaza todos los campos al fusionar, así que si no se heredan quedan vacíos).
+INHERIT = ("icon", "label", "aliases")
+OMARCHY_DEFAULT = os.environ.get("OMARCHY_DEFAULT_MENU", "/usr/share/omarchy/default/omarchy/omarchy-menu.jsonc")
 
 SHARE = os.environ.get("LIZARBE_SHARE", "/usr/share/lizarbe")
 
@@ -35,6 +50,27 @@ SHARE = os.environ.get("LIZARBE_SHARE", "/usr/share/lizarbe")
 def strip_comments(text: str) -> str:
     """Quita las líneas que son solo comentario (lo que usa Omarchy)."""
     return "\n".join(l for l in text.splitlines() if not l.strip().startswith("//"))
+
+
+def load_defaults(path: str) -> dict:
+    """Entradas del menú de Omarchy ({} si no se puede leer)."""
+    try:
+        with open(path, encoding="utf-8") as f:
+            text = re.sub(r",(\s*[}\]])", r"\1", strip_comments(f.read()))
+        data = json.loads(text)
+        return data.get("items", data) if isinstance(data, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def inherit_defaults(entries: dict, defaults: dict) -> dict:
+    out = {}
+    for key, val in entries.items():
+        base = defaults.get(key)
+        if isinstance(base, dict) and "target" not in val:
+            val = {**{f: base[f] for f in INHERIT if f in base and f not in val}, **val}
+        out[key] = val
+    return out
 
 
 def remove_block(text: str) -> str:
@@ -151,7 +187,7 @@ def main() -> int:
             print(msg)
 
     with open(a.source, encoding="utf-8") as f:
-        entries = json.load(f)
+        entries = inherit_defaults(json.load(f), load_defaults(OMARCHY_DEFAULT))
     try:
         with open(a.file, encoding="utf-8") as f:
             current = f.read()
