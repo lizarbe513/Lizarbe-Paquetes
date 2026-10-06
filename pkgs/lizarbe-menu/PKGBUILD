@@ -1,0 +1,29 @@
+# Maintainer: Lizarbe <lizarbe513>
+pkgname=lizarbe-menu
+pkgver=0.1.0
+pkgrel=1
+pkgdesc='Menú, reglas de ventana y hooks de Lizarbe para Omarchy (incluye lizarbe-doctor)'
+arch=('any')
+url='https://github.com/lizarbe513/Lizarbe-Paquetes'
+license=('MIT')
+depends=('python' 'bash' 'omarchy')
+backup=('etc/pacman.d/lizarbe.conf')
+install=lizarbe-menu.install
+source=()
+sha256sums=()
+
+package() {
+  cd "$startdir"
+  install -Dm755 bin/lizarbe-menu-sync "$pkgdir/usr/bin/lizarbe-menu-sync"
+  install -Dm755 bin/lizarbe-doctor "$pkgdir/usr/bin/lizarbe-doctor"
+  install -Dm644 share/menu/lizarbe.jsonc "$pkgdir/usr/share/lizarbe/menu/lizarbe.jsonc"
+  install -Dm644 share/hypr/reglas.lua "$pkgdir/usr/share/lizarbe/hypr/reglas.lua"
+  install -Dm644 etc/lizarbe.conf "$pkgdir/etc/pacman.d/lizarbe.conf"
+  local h
+  for h in share/hooks/*/*.sh; do
+    local rel=${h#share/hooks/}
+    install -Dm755 "$h" "$pkgdir/usr/share/lizarbe/hooks/$rel"
+    # Usuarios nuevos reciben los hooks desde /etc/skel.
+    install -Dm755 "$h" "$pkgdir/etc/skel/.config/omarchy/hooks/$rel"
+  done
+}

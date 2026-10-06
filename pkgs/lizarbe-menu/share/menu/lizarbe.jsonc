@@ -1,0 +1,82 @@
+{
+  "lizarbe": {
+    "icon": "󰣆",
+    "label": "Centro Lizarbe",
+    "description": "Identidad, software y actualizaciones",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe lizarbe-tui"
+  },
+  "setup.widgets": {
+    "icon": "󰕮",
+    "label": "Widgets y barra",
+    "description": "Barra, widgets, plugins y apariencia del shell",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets"
+  },
+  "setup.plugin": {
+    "icon": "󰐱",
+    "label": "Plugins",
+    "aliases": [
+      "plugin",
+      "plugins"
+    ],
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets --section plugins"
+  },
+  "setup.config.looknfeel": {
+    "icon": "",
+    "label": "Apariencia (looknfeel.lua)",
+    "when": "[[ -f ~/.config/hypr/looknfeel.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/looknfeel.lua\""
+  },
+  "setup.config.monitors": {
+    "icon": "󰍹",
+    "label": "Pantallas (monitors.lua)",
+    "when": "[[ -f ~/.config/hypr/monitors.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/monitors.lua\""
+  },
+  "setup.config.bindings": {
+    "icon": "",
+    "label": "Atajos (bindings.lua)",
+    "when": "[[ -f ~/.config/hypr/bindings.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/bindings.lua\""
+  },
+  "setup.config.input": {
+    "icon": "",
+    "label": "Teclado y mouse (input.lua)",
+    "when": "[[ -f ~/.config/hypr/input.lua ]]",
+    "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/input.lua\""
+  },
+  "style.hyprland": {
+    "icon": "",
+    "label": "Apariencia de ventanas",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section apariencia"
+  },
+  "setup.monitors": {
+    "icon": "󰍹",
+    "label": "Pantallas",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section pantallas"
+  },
+  "setup.keybindings": {
+    "icon": "",
+    "label": "Atajos de teclado",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section atajos"
+  },
+  "setup.input": {
+    "icon": "",
+    "label": "Teclado y mouse",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section teclado"
+  },
+  "setup.nightlight": {
+    "icon": "󰖔",
+    "label": "Luz nocturna",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section luz"
+  },
+  "setup.compose": {
+    "icon": "󰗊",
+    "label": "Atajos de texto",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section texto"
+  },
+  "setup.escritorio": {
+    "icon": "󰍹",
+    "label": "Escritorio",
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio"
+  }
+}

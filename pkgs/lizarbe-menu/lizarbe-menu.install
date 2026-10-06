@@ -1,0 +1,16 @@
+# Acciones de sistema (root) del paquete lizarbe-menu. Lo que es de cada usuario
+# lo hace lizarbe-doctor desde los hooks de Omarchy.
+
+post_install() { _lizarbe_system; }
+post_upgrade() { _lizarbe_system; }
+
+_lizarbe_system() {
+  # Hook de pacman de versiones anteriores: corría como root y no actualizaba nada.
+  rm -f /etc/pacman.d/hooks/00-lizarbe-update.hook
+
+  # El repo de Lizarbe debe estar en pacman.conf para que `omarchy update` lo use.
+  if [ -r /etc/pacman.d/lizarbe.conf ] && [ -f /etc/pacman.conf ] \
+    && ! grep -qxF 'Include = /etc/pacman.d/lizarbe.conf' /etc/pacman.conf; then
+    sed -i '0,/^\[core\]/s||Include = /etc/pacman.d/lizarbe.conf\n\n[core]|' /etc/pacman.conf
+  fi
+}
