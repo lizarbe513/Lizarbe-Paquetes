@@ -1,0 +1,6 @@
+post_install() { _lizarbe_iconos; }
+post_upgrade() { _lizarbe_iconos; }
+
+_lizarbe_iconos() {
+  command -v gtk-update-icon-cache >/dev/null && gtk-update-icon-cache -f -q /usr/share/icons/Lizarbe-Red 2>/dev/null || true
+}

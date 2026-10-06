@@ -1,0 +1,45 @@
+# Maintainer: Lizarbe <lizarbe513>
+pkgname=lizarbe-tema
+pkgver=0.2.1
+pkgrel=1
+pkgdesc='Identidad Lizarbe: temas de Omarchy, iconos Lizarbe-Red, tema GTK Darky, branding, fastfetch y starship'
+arch=('any')
+url='https://github.com/lizarbe513/Lizarbe-Omarchy-Config'
+license=('MIT')
+depends=('omarchy')
+optdepends=('fastfetch: logo Lizarbe en la información del sistema'
+            'starship: prompt Lizarbe')
+install=lizarbe-tema.install
+options=('!strip')
+source=("lizarbe-centro::git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+package() {
+  cd "$srcdir/lizarbe-centro"
+
+  # Temas de Omarchy (oscuro y claro).
+  install -d "$pkgdir/usr/share/omarchy/themes"
+  cp -r config/omarchy/themes/lizarbe config/omarchy/themes/lizarbe-light "$pkgdir/usr/share/omarchy/themes/"
+
+  # Branding (about, logo y salvapantallas).
+  install -d "$pkgdir/usr/share/omarchy/branding"
+  cp -r config/omarchy/branding/. "$pkgdir/usr/share/omarchy/branding/"
+
+  # Fastfetch y starship por defecto del sistema y de los usuarios nuevos.
+  install -d "$pkgdir/etc/xdg/fastfetch" "$pkgdir/etc/skel/.config/fastfetch"
+  cp -r config/fastfetch/. "$pkgdir/etc/xdg/fastfetch/"
+  cp -r config/fastfetch/. "$pkgdir/etc/skel/.config/fastfetch/"
+  install -Dm644 config/starship.toml "$pkgdir/etc/starship.toml"
+
+  # Iconos y tema GTK.
+  install -d "$pkgdir/usr/share/icons" "$pkgdir/usr/share/themes"
+  cp -r icons/Lizarbe-Red "$pkgdir/usr/share/icons/"
+  cp -r themes/Darky "$pkgdir/usr/share/themes/"
+
+  # Aplica la identidad Lizarbe a un usuario (enlaces, fastfetch, starship, branding, tema).
+  install -Dm755 lizarbe-apply-user "$pkgdir/usr/bin/lizarbe-apply-user"
+
+  # Permisos de lectura para todos.
+  find "$pkgdir/usr/share" "$pkgdir/etc" -type d -exec chmod 755 {} +
+  find "$pkgdir/usr/share" "$pkgdir/etc" -type f ! -perm /111 -exec chmod 644 {} +
+}
