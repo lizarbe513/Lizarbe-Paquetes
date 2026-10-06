@@ -17,7 +17,7 @@ pkgs=("$@")
 
 for p in "${pkgs[@]}"; do
   echo ":: Construyendo $p"
-  (cd "$AQUI/pkgs/$p" && PKGDEST="$OUT" BUILDDIR="${TMPDIR:-/tmp}/lizarbe-build" makepkg -f --nodeps --noconfirm)
+  (cd "$AQUI/pkgs/$p" && PKGDEST="$OUT" SRCDEST="${TMPDIR:-/tmp}/lizarbe-src" BUILDDIR="${TMPDIR:-/tmp}/lizarbe-build" makepkg -f --nodeps --noconfirm)
 done
 
 cd "$OUT"

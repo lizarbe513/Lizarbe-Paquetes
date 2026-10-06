@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-tema
-pkgver=0.2.1
+pkgver=0.3.0
 pkgrel=1
 pkgdesc='Identidad Lizarbe: temas de Omarchy, iconos Lizarbe-Red, tema GTK Darky, branding, fastfetch y starship'
 arch=('any')
@@ -11,8 +11,10 @@ optdepends=('fastfetch: logo Lizarbe en la información del sistema'
             'starship: prompt Lizarbe')
 install=lizarbe-tema.install
 options=('!strip')
-source=("lizarbe-centro::git+$url.git#tag=v$pkgver")
-sha256sums=('SKIP')
+source=("lizarbe-centro::git+$url.git#tag=v$pkgver"
+        'provision-owner.conf')
+sha256sums=('SKIP'
+            'SKIP')
 
 package() {
   cd "$srcdir/lizarbe-centro"
@@ -38,6 +40,11 @@ package() {
 
   # Aplica la identidad Lizarbe a un usuario (enlaces, fastfetch, starship, branding, tema).
   install -Dm755 lizarbe-apply-user "$pkgdir/usr/bin/lizarbe-apply-user"
+
+  # Primer arranque: tras registrar al usuario dueño, aplica la identidad Lizarbe.
+  install -Dm755 lizarbe-provision-owner-post "$pkgdir/usr/bin/lizarbe-provision-owner-post"
+  install -Dm644 "$srcdir/provision-owner.conf" \
+    "$pkgdir/usr/lib/systemd/system/omarchy-provision-owner.service.d/50-lizarbe.conf"
 
   # Permisos de lectura para todos.
   find "$pkgdir/usr/share" "$pkgdir/etc" -type d -exec chmod 755 {} +

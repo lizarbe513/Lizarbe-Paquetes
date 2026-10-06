@@ -1,12 +1,12 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe
 pkgver=1
-pkgrel=1
-pkgdesc='Lizarbe para Omarchy: instala todos los componentes (menú, Escritorio, Widgets y tema)'
+pkgrel=2
+pkgdesc='Lizarbe para Omarchy: instala todos los componentes (menú, Escritorio, Widgets, tema y Centro)'
 arch=('any')
 url='https://github.com/lizarbe513/Lizarbe-Paquetes'
 license=('MIT')
-depends=('lizarbe-keyring' 'lizarbe-menu' 'lizarbe-ajustes' 'lizarbe-tema')
+depends=('lizarbe-keyring' 'lizarbe-menu' 'lizarbe-ajustes' 'lizarbe-tema' 'lizarbe-centro')
 source=()
 sha256sums=()
 

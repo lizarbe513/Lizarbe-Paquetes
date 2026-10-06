@@ -169,11 +169,15 @@ check_legacy() {
     "$HOME/.local/bin/lizarbe-escritorio" "$HOME/.local/bin/lizarbe-widgets" "$HOME/.local/bin/lizarbe-hypr-rules" \
     "$HOME/.local/share/applications/meca.desktop" "$HOME/.local/share/applications/meca-qs.desktop" \
     "$HOME/.local/share/applications/lizarbe-escritorio.desktop" "$HOME/.local/share/applications/lizarbe-widgets.desktop" \
-    "$HOOKS_DIR/post-update.d/99-meca-hyprconfig.sh"; do
+    "$HOOKS_DIR/post-update.d/99-meca-hyprconfig.sh" \
+    "$HOOKS_DIR/post-update.d/00-lizarbe-update.hook"; do
     # Solo si el paquete ya trae el programa (no se quita lo único que hay).
     case $f in
       */.local/bin/lizarbe-escritorio | */.local/bin/lizarbe-widgets)
         [[ -x /usr/bin/${f##*/} ]] || continue ;;
+      */post-update.d/00-lizarbe-update.hook)
+        # El hook viejo actualizaba por git; ahora actualiza pacman (paquete lizarbe-centro).
+        [[ -x /usr/bin/lizarbe && -f /usr/lib/lizarbe-centro/install.sh ]] || continue ;;
       */.local/share/applications/lizarbe-escritorio.desktop | */.local/share/applications/lizarbe-widgets.desktop)
         [[ -f /usr/share/applications/${f##*/} ]] || continue ;;
     esac
@@ -192,6 +196,17 @@ check_legacy() {
         problem "enlace al instalador viejo: $f" rm -f "$f"
       fi
     done
+  fi
+  # Archivos de root del instalador viejo: solo se pueden quitar con sudo.
+  local root_left=()
+  for f in /opt/Lizarbe-Omarchy-Theme /usr/local/bin/lizarbe /usr/local/bin/lizarbe-tui /usr/local/bin/lizarbe-update \
+    /usr/local/bin/lizarbe-apply-user /usr/local/bin/lizarbe-hypr-rules /usr/local/bin/lizarbe-provision-owner-post \
+    /etc/systemd/system/omarchy-provision-owner.service.d/lizarbe.conf; do
+    [[ -e $f || -L $f ]] && root_left+=("$f")
+  done
+  if [[ ${#root_left[@]} -gt 0 && -x /usr/bin/lizarbe && -x /usr/bin/lizarbe-apply-user ]]; then
+    found=1
+    bad "quedan archivos del instalador viejo (los reemplazan los paquetes). Quítalos con: sudo rm -rf ${root_left[*]}"
   fi
   [[ $found -eq 0 ]] && ok "sin restos"
 }

@@ -2,3 +2,5 @@ src/
 pkg/
 *.pkg.tar.*
 dist/
+pkgs/*/lizarbe-centro/
+pkgs/*/Lizarbe-*/

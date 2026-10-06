@@ -1,0 +1,34 @@
+# Maintainer: Lizarbe <lizarbe513>
+pkgname=lizarbe-centro
+pkgver=0.3.0
+pkgrel=1
+pkgdesc='Centro Lizarbe: panel TUI de identidad, software (suites) y actualizaciones para Omarchy'
+arch=('any')
+url='https://github.com/lizarbe513/Lizarbe-Omarchy-Config'
+license=('MIT')
+depends=('python' 'omarchy' 'lizarbe-tema')
+optdepends=('kdeconnect: conexión con el celular')
+options=('!strip')
+source=("lizarbe-centro::git+$url.git#tag=v$pkgver")
+sha256sums=('SKIP')
+
+package() {
+  cd "$srcdir/lizarbe-centro"
+
+  # Aplicación (Python) y scripts de las suites.
+  local app="$pkgdir/usr/lib/lizarbe-centro"
+  install -d "$app"
+  cp -r lizarbe_tui scripts packages "$app/"
+  install -m755 install.sh uninstall.sh "$app/"
+  find "$app" -name __pycache__ -type d -prune -exec rm -rf {} +
+
+  # Comandos.
+  install -Dm755 lizarbe "$pkgdir/usr/bin/lizarbe"
+  ln -s lizarbe "$pkgdir/usr/bin/lizarbe-tui"
+
+  # Entrada de aplicaciones.
+  install -Dm644 lizarbe.desktop "$pkgdir/usr/share/applications/lizarbe.desktop"
+
+  find "$app" -type d -exec chmod 755 {} +
+  find "$app" -type f ! -perm /111 -exec chmod 644 {} +
+}
