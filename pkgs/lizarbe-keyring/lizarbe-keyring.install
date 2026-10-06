@@ -1,0 +1,2 @@
+post_install() { pacman-key --populate lizarbe >/dev/null 2>&1 || true; }
+post_upgrade() { pacman-key --populate lizarbe >/dev/null 2>&1 || true; }

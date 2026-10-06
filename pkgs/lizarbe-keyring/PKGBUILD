@@ -1,0 +1,19 @@
+# Maintainer: Lizarbe <lizarbe513>
+pkgname=lizarbe-keyring
+pkgver=1
+pkgrel=1
+pkgdesc='Llave de firma de los paquetes de Lizarbe'
+arch=('any')
+url='https://github.com/lizarbe513/Lizarbe-Paquetes'
+license=('MIT')
+depends=('pacman')
+install=lizarbe-keyring.install
+source=()
+sha256sums=()
+
+package() {
+  cd "$startdir"
+  install -Dm644 lizarbe.gpg "$pkgdir/usr/share/pacman/keyrings/lizarbe.gpg"
+  install -Dm644 lizarbe-trusted "$pkgdir/usr/share/pacman/keyrings/lizarbe-trusted"
+  install -Dm644 lizarbe-revoked "$pkgdir/usr/share/pacman/keyrings/lizarbe-revoked"
+}
