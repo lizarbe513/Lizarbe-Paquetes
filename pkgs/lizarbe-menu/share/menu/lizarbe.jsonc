@@ -1,11 +1,17 @@
 {
   "lizarbe": {
     "icon": "\udb82\udcc6",
-    "label": "Centro Lizarbe",
+    "label": {
+      "es": "Centro Lizarbe",
+      "en": "Lizarbe Center"
+    },
     "aliases": [
       "lizarbe"
     ],
-    "description": "Tema, identidad, software recomendado y actualizaciones",
+    "description": {
+      "es": "Tema, identidad, software recomendado y actualizaciones",
+      "en": "Theme, identity, recommended software and updates"
+    },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe lizarbe-tui"
   },
   "system": {
@@ -26,15 +32,39 @@
   },
   "setup.nightlight": {
     "icon": "\udb81\udd94",
-    "label": "Luz nocturna",
-    "description": "Filtro de luz azul",
+    "label": {
+      "es": "Luz nocturna",
+      "en": "Night Light"
+    },
+    "description": {
+      "es": "Filtro de luz azul",
+      "en": "Blue light filter"
+    },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section luz"
   },
   "setup.compose": {
     "icon": "\udb81\uddca",
-    "label": "Atajos de texto",
-    "description": "Escribir s\u00edmbolos y frases con una secuencia",
+    "label": {
+      "es": "Atajos de texto",
+      "en": "Text Shortcuts"
+    },
+    "description": {
+      "es": "Escribir s\u00edmbolos y frases con una secuencia",
+      "en": "Type symbols and phrases with a key sequence"
+    },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section texto"
+  },
+  "setup.language": {
+    "icon": "\uf1ab",
+    "label": {
+      "es": "Idioma",
+      "en": "Language"
+    },
+    "description": {
+      "es": "Idioma del sistema, el men\u00fa y las apps Lizarbe",
+      "en": "System, menu and Lizarbe apps language"
+    },
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section idioma"
   },
   "setup.network": {
     "when": "false",
@@ -115,14 +145,26 @@
   },
   "style.temas": {
     "icon": "\udb80\udfd8",
-    "label": "Mis temas",
-    "description": "Crear y editar temas de color",
+    "label": {
+      "es": "Mis temas",
+      "en": "My Themes"
+    },
+    "description": {
+      "es": "Crear y editar temas de color",
+      "en": "Create and edit color themes"
+    },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section temas"
   },
   "style.widgets": {
     "icon": "\udb81\udd6e",
-    "label": "Widgets y barra",
-    "description": "Barra superior y widgets",
+    "label": {
+      "es": "Widgets y barra",
+      "en": "Widgets & Bar"
+    },
+    "description": {
+      "es": "Barra superior y widgets",
+      "en": "Top bar and widgets"
+    },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets"
   }
 }

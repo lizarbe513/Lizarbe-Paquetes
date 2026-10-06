@@ -11,7 +11,11 @@ Lo demás del archivo (tus propias entradas y comentarios) no se toca. Antes de
 guardar se comprueba que el resultado sea JSON válido (si no lo es, Omarchy
 ignoraría todo el archivo) y se hace una copia de seguridad.
 
-Uso: lizarbe-menu-sync [--check] [--remove] [--quiet] [--no-refresh]
+Idioma: con `--lang es` (o `lang = "es"` en ~/.config/lizarbe/ajustes.toml, o $LANG)
+se traducen las etiquetas del menú de Omarchy copiando sus entradas con la etiqueta en
+español. Con `en` se deja el inglés de Omarchy. Todo se regenera tras cada actualización.
+
+Uso: lizarbe-menu-sync [--check] [--remove] [--quiet] [--no-refresh] [--lang es|en]
      [--file RUTA] [--source RUTA]
 """
 
@@ -94,6 +98,72 @@ def inherit_defaults(entries: dict, defaults: dict) -> dict:
             if isinstance(base, dict) and "target" not in val:
                 val = {**{f: base[f] for f in INHERIT if f in base and f not in val}, **val}
         out[key] = val
+    return out
+
+
+def detect_lang(explicit: str = "") -> str:
+    """Idioma de Lizarbe: argumento, preferencias (~/.config/lizarbe/ajustes.toml) o $LANG."""
+    if explicit in ("es", "en"):
+        return explicit
+    cfg = os.environ.get("XDG_CONFIG_HOME") or os.path.expanduser("~/.config")
+    try:
+        import tomllib
+
+        with open(os.path.join(cfg, "lizarbe", "ajustes.toml"), "rb") as f:
+            lang = str(tomllib.load(f).get("lang", "")).lower()
+        if lang in ("es", "en"):
+            return lang
+    except (OSError, ValueError, ImportError):
+        pass
+    for var in ("LC_ALL", "LC_MESSAGES", "LANG"):
+        v = os.environ.get(var, "")
+        if v and v not in ("C", "POSIX"):
+            return "es" if v.lower().startswith("es") else "en"
+    return "en"
+
+
+def load_translations(lang: str) -> dict:
+    path = os.path.join(SHARE, "menu", "i18n", f"{lang}.json")
+    try:
+        with open(path, encoding="utf-8") as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return {}
+
+
+def translate_defaults(defaults: dict, tr: dict) -> dict:
+    """Entradas de Omarchy con la etiqueta traducida (las que no tienen traducción quedan igual)."""
+    labels, ids = tr.get("labels", {}), tr.get("ids", {})
+    out = {}
+    for key, val in defaults.items():
+        if not isinstance(val, dict):
+            continue
+        new = ids.get(key) or labels.get(val.get("label", ""))
+        out[key] = {**val, "label": new} if new else val
+    if "root" in ids and "root" not in out:
+        out["root"] = {"label": ids["root"]}
+    return out
+
+
+def resolve_lang_fields(entries: dict, lang: str) -> dict:
+    """Campos de nuestras entradas escritos como {"es": ..., "en": ...} se resuelven al idioma."""
+    out = {}
+    for key, val in entries.items():
+        out[key] = {
+            k: (v.get(lang) or v.get("en") or next(iter(v.values())) if isinstance(v, dict) and ("es" in v or "en" in v) else v)
+            for k, v in val.items()
+        }
+    return out
+
+
+def translated_copies(entries: dict, defaults_t: dict, defaults: dict) -> dict:
+    """Copias completas de las entradas de Omarchy cuya etiqueta cambia (Omarchy reemplaza todos
+    los campos al fusionar, así que hay que repetir `action`, `icon`, etc.). Las propias van primero."""
+    out = dict(entries)
+    for key, val in defaults_t.items():
+        if key in out or (key in defaults and val.get("label") == defaults[key].get("label")):
+            continue
+        out[key] = {k: v for k, v in val.items() if k != "parent"}
     return out
 
 
@@ -202,6 +272,7 @@ def main() -> int:
     ap.add_argument("--remove", action="store_true", help="quitar las entradas de Lizarbe")
     ap.add_argument("--quiet", action="store_true")
     ap.add_argument("--no-refresh", action="store_true")
+    ap.add_argument("--lang", default="", choices=["", "es", "en"], help="idioma del menú (por defecto: el de Lizarbe)")
     ap.add_argument("--file", default=os.path.expanduser("~/.config/omarchy/extensions/omarchy-menu.jsonc"))
     ap.add_argument("--source", default=os.path.join(SHARE, "menu/lizarbe.jsonc"))
     a = ap.parse_args()
@@ -211,7 +282,12 @@ def main() -> int:
             print(msg)
 
     with open(a.source, encoding="utf-8") as f:
-        entries = inherit_defaults(json.load(f), load_defaults(OMARCHY_DEFAULT))
+        source = json.load(f)
+    lang = detect_lang(a.lang)
+    defaults = load_defaults(OMARCHY_DEFAULT)
+    defaults_t = translate_defaults(defaults, load_translations(lang) if lang != "en" else {})
+    entries = inherit_defaults(resolve_lang_fields(source, lang), defaults_t)
+    entries = translated_copies(entries, defaults_t, defaults)
     try:
         with open(a.file, encoding="utf-8") as f:
             current = f.read()

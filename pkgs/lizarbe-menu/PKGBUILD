@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-menu
-pkgver=0.3.0
+pkgver=0.4.0
 pkgrel=1
 pkgdesc='Menú, reglas de ventana y hooks de Lizarbe para Omarchy (incluye lizarbe-doctor)'
 arch=('any')
@@ -17,6 +17,7 @@ package() {
   install -Dm755 bin/lizarbe-menu-sync "$pkgdir/usr/bin/lizarbe-menu-sync"
   install -Dm755 bin/lizarbe-doctor "$pkgdir/usr/bin/lizarbe-doctor"
   install -Dm644 share/menu/lizarbe.jsonc "$pkgdir/usr/share/lizarbe/menu/lizarbe.jsonc"
+  install -Dm644 share/menu/i18n/es.json "$pkgdir/usr/share/lizarbe/menu/i18n/es.json"
   install -Dm644 share/hypr/reglas.lua "$pkgdir/usr/share/lizarbe/hypr/reglas.lua"
   install -Dm644 etc/lizarbe.conf "$pkgdir/etc/pacman.d/lizarbe.conf"
   local h
