@@ -180,7 +180,10 @@ check_omarchy_files() {
   say "Archivos de Omarchy"
   command -v pacman >/dev/null || return
   local mod
-  mod=$(pacman -Qkk omarchy omarchy-settings 2>/dev/null | grep -iE 'modified|mtree' | head -5)
+  # Solo cuenta si el contenido cambió (tamaño o suma de comprobación); la hora
+  # o los permisos de lectura no importan.
+  mod=$(pacman -Qkk omarchy omarchy-settings 2>&1 | grep -E 'Size mismatch|checksum mismatch' |
+    sed -E 's/^warning: [^:]+: ([^ ]+) .*/\1/' | sort -u | head -8)
   if [[ -z $mod ]]; then
     ok "ninguno modificado"
   else
