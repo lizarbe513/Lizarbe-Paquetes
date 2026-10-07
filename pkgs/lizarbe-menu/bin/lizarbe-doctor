@@ -137,6 +137,13 @@ check_rules() {
   if [[ $legacy -eq 1 ]]; then
     problem "quedan cargas o archivos de reglas de versiones anteriores" bash -c "$(declare -f backup_once drop_legacy_requires drop_legacy_files); MAIN='$MAIN'; HYPR_DIR='$HYPR_DIR'; LEGACY_REQUIRES=(${LEGACY_REQUIRES[*]}); LEGACY_RULE_FILES=(${LEGACY_RULE_FILES[*]}); drop_legacy_requires; drop_legacy_files" && changed=1
   fi
+  # Hyprland solo lee las reglas al iniciar o recargar: si una actualización trae reglas
+  # nuevas (una app nueva que debe abrir flotante), hay que recargar una vez.
+  local stamp="${XDG_STATE_HOME:-$HOME/.local/state}/lizarbe/reglas.sha256" now
+  now=$(sha256sum "$SHARE/hypr/reglas.lua" | cut -d' ' -f1)
+  if [[ "$(cat "$stamp" 2>/dev/null)" != "$now" ]]; then
+    problem "las reglas de ventana de Hyprland no están cargadas" bash -c 'mkdir -p "$(dirname "$1")" && echo "$2" > "$1"' _ "$stamp" "$now" && changed=1
+  fi
   [[ $changed -eq 1 && $FIX -eq 1 ]] && RELOAD=1
 }
 
