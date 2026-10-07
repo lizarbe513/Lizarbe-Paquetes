@@ -66,6 +66,18 @@
     },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section idioma"
   },
+  "setup.autostart": {
+    "icon": "\udb81\udc25",
+    "label": {
+      "es": "Inicio autom\u00e1tico",
+      "en": "Startup Apps"
+    },
+    "description": {
+      "es": "Programas que se abren al iniciar sesi\u00f3n",
+      "en": "Programs that open when you log in"
+    },
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section inicio"
+  },
   "setup.network": {
     "when": "false",
     "aliases": []
@@ -96,6 +108,18 @@
   },
   "setup.lz-network": {
     "like": "setup.network"
+  },
+  "setup.phone": {
+    "icon": "\udb80\udd1c",
+    "label": {
+      "es": "KDE Connect",
+      "en": "KDE Connect"
+    },
+    "description": {
+      "es": "Vincular tu celular: notificaciones, archivos y portapapeles",
+      "en": "Link your phone: notifications, files and clipboard"
+    },
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe lizarbe-tui --section kdeconnect"
   },
   "setup.lz-default": {
     "like": "setup.default"

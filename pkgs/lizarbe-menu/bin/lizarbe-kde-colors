@@ -1,0 +1,159 @@
+#!/usr/bin/env python3
+"""Pinta las apps de KDE (KDE Connect…) con los colores del tema de Omarchy.
+
+Lee el colors.toml del tema activo y escribe en ~/.config/kdeglobals solo las
+secciones [Colors:*] (el resto del archivo no se toca; antes se guarda una
+copia en kdeglobals.lizarbe-bak). Lo ejecuta el hook theme-set de Lizarbe cada
+vez que cambia el tema, y el Centro antes de abrir KDE Connect.
+
+Uso: lizarbe-kde-colors [--remove] [--theme RUTA/colors.toml] [--file RUTA]
+"""
+
+import argparse
+import os
+import re
+import shutil
+import sys
+import tomllib
+
+MANAGED = ("Window", "View", "Button", "Selection", "Tooltip", "Complementary", "Header")
+START = "# >>> lizarbe (colores del tema de Omarchy)"
+END = "# <<< lizarbe"
+
+
+def rgb(h: str) -> tuple:
+    h = h.strip().lstrip("#")
+    if len(h) == 3:
+        h = "".join(c * 2 for c in h)
+    return int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16)
+
+
+def lum(c: tuple) -> float:
+    f = lambda v: (v / 255 / 12.92) if v / 255 <= 0.03928 else (((v / 255) + 0.055) / 1.055) ** 2.4
+    return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2])
+
+
+def on(bg: tuple) -> tuple:
+    """Negro o blanco, el que más contraste dé sobre `bg`."""
+    return (0, 0, 0) if lum(bg) > 0.35 else (255, 255, 255)
+
+
+def mix(a: tuple, b: tuple, r: float) -> tuple:
+    return tuple(round(x * (1 - r) + y * r) for x, y in zip(a, b))
+
+
+def fmt(c: tuple) -> str:
+    return "%d,%d,%d" % c
+
+
+def palette(t: dict) -> str:
+    g = lambda k, d: rgb(t.get(k, d))
+    bg = g("background", "#101014")
+    fg = g("foreground", "#d0d0d0")
+    accent = g("accent", "#e31b23")
+    alt = g("dark_background", fmt_hex(mix(bg, fg, 0.06)))
+    raised = g("lighter_background", fmt_hex(mix(bg, fg, 0.10)))
+    muted = g("muted", fmt_hex(mix(fg, bg, 0.45)))
+    red, yellow, green = g("red", "#e05561"), g("yellow", "#e0af68"), g("green", "#9ece6a")
+    blue, magenta = g("blue", "#7aa2f7"), g("magenta", "#bb9af7")
+    lines = [START]
+
+    def group(name, bgc, altc, fgc, deco=accent):
+        lines.append(f"[Colors:{name}]")
+        for key, val in (
+            ("BackgroundNormal", bgc),
+            ("BackgroundAlternate", altc),
+            ("DecorationFocus", deco),
+            ("DecorationHover", deco),
+            ("ForegroundNormal", fgc),
+            ("ForegroundInactive", muted),
+            ("ForegroundActive", accent),
+            ("ForegroundLink", blue),
+            ("ForegroundVisited", magenta),
+            ("ForegroundNegative", red),
+            ("ForegroundNeutral", yellow),
+            ("ForegroundPositive", green),
+        ):
+            lines.append(f"{key}={fmt(val)}")
+        lines.append("")
+
+    group("Window", bg, alt, fg)
+    group("View", bg, alt, fg)
+    group("Button", raised, alt, fg)
+    group("Selection", accent, mix(accent, bg, 0.2), on(accent), deco=on(accent))
+    group("Tooltip", raised, alt, fg)
+    group("Complementary", alt, bg, fg)
+    group("Header", alt, bg, fg)
+    lines.append(END)
+    return "\n".join(lines) + "\n"
+
+
+def fmt_hex(c: tuple) -> str:
+    return "#%02x%02x%02x" % c
+
+
+def strip_managed(text: str) -> str:
+    """Quita lo que Lizarbe escribió antes (bloque delimitado)."""
+    out, skip = [], False
+    for line in text.splitlines():
+        if line.strip() == START:
+            skip = True
+            continue
+        if skip:
+            if line.strip() == END:
+                skip = False
+            continue
+        out.append(line)
+    return "\n".join(out).rstrip("\n") + ("\n" if out else "")
+
+
+def drop_color_sections(text: str) -> str:
+    """Quita las secciones [Colors:*] que choquen con las nuestras (KConfig no admite duplicadas)."""
+    names = {f"[Colors:{n}]" for n in MANAGED}
+    out, skip = [], False
+    for line in text.splitlines():
+        s = line.strip()
+        if s.startswith("["):
+            skip = s in names
+        if not skip:
+            out.append(line)
+    return "\n".join(out).rstrip("\n") + ("\n" if out else "")
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    ap.add_argument("--remove", action="store_true", help="quitar los colores de Lizarbe")
+    ap.add_argument("--theme", default=os.path.expanduser("~/.local/state/omarchy/current/theme/colors.toml"))
+    ap.add_argument("--file", default=os.path.expanduser("~/.config/kdeglobals"))
+    a = ap.parse_args()
+
+    try:
+        current = open(a.file, encoding="utf-8").read()
+    except FileNotFoundError:
+        current = ""
+    base = strip_managed(current)
+    if a.remove:
+        new = base
+    else:
+        try:
+            with open(a.theme, "rb") as f:
+                theme = tomllib.load(f)
+        except (OSError, ValueError) as e:
+            print(f"lizarbe-kde-colors: no se pudo leer {a.theme}: {e}", file=sys.stderr)
+            return 1
+        new = drop_color_sections(base)
+        new = (new + "\n" if new.strip() else "") + palette(theme)
+    if new == current:
+        return 0
+    if current and not os.path.exists(a.file + ".lizarbe-bak"):
+        shutil.copy2(a.file, a.file + ".lizarbe-bak")
+    os.makedirs(os.path.dirname(a.file), exist_ok=True)
+    tmp = a.file + ".lizarbe.tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        f.write(new)
+    os.replace(tmp, a.file)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

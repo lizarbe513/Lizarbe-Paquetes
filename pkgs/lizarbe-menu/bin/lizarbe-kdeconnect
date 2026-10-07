@@ -1,0 +1,7 @@
+#!/bin/bash
+# Abre KDE Connect con los colores del tema de Omarchy.
+# Omarchy usa QT_QPA_PLATFORMTHEME=gtk3, que solo da modo claro u oscuro; sin ese
+# tema de plataforma las apps de KDE leen la paleta completa de ~/.config/kdeglobals.
+# Solo afecta a esta aplicación, no al resto de apps Qt.
+command -v lizarbe-kde-colors >/dev/null && lizarbe-kde-colors 2>/dev/null
+QT_QPA_PLATFORMTHEME= exec kdeconnect-app "$@"
