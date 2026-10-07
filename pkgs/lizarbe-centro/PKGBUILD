@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-centro
-pkgver=0.3.2
+pkgver=0.4.0
 pkgrel=1
 pkgdesc='Centro Lizarbe: panel TUI de identidad, software (suites) y actualizaciones para Omarchy'
 arch=('any')
