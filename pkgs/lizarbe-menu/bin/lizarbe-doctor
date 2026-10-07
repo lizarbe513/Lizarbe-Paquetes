@@ -167,16 +167,16 @@ check_legacy() {
   # Meca y copias de desarrollo que ahora trae un paquete (ya están en /usr/bin).
   local apps="$HOME/.local/share/applications"
   for f in "$HOME/.local/bin/meca" "$HOME/.local/bin/meca-hyprconfig" "$HOME/.local/bin/meca-qs" \
-    "$HOME/.local/bin/lizarbe-escritorio" "$HOME/.local/bin/lizarbe-widgets" "$HOME/.local/bin/lizarbe-temas" \
+    "$HOME/.local/bin/lizarbe-escritorio" "$HOME/.local/bin/lizarbe-widgets" "$HOME/.local/bin/lizarbe-temas" "$HOME/.local/bin/lizarbe-tienda" \
     "$HOME/.local/bin/lizarbe-hypr-rules" \
     "$HOME/.local/bin/lizarbe" "$HOME/.local/bin/lizarbe-tui" "$HOME/.local/bin/lizarbe-update" \
     "$apps/meca.desktop" "$apps/meca-qs.desktop" "$apps/lizarbe.desktop" \
-    "$apps/lizarbe-escritorio.desktop" "$apps/lizarbe-widgets.desktop" "$apps/lizarbe-temas.desktop" \
+    "$apps/lizarbe-escritorio.desktop" "$apps/lizarbe-widgets.desktop" "$apps/lizarbe-temas.desktop" "$apps/lizarbe-tienda.desktop" \
     "$HOOKS_DIR/post-update.d/99-meca-hyprconfig.sh" \
     "$HOOKS_DIR/post-update.d/00-lizarbe-update.hook"; do
     # Solo si el paquete ya trae el programa (no se quita lo único que hay).
     case $f in
-      */.local/bin/lizarbe-escritorio | */.local/bin/lizarbe-widgets | */.local/bin/lizarbe-temas)
+      */.local/bin/lizarbe-escritorio | */.local/bin/lizarbe-widgets | */.local/bin/lizarbe-temas | */.local/bin/lizarbe-tienda)
         [[ -x /usr/bin/${f##*/} ]] || continue ;;
       */.local/bin/lizarbe | */.local/bin/lizarbe-tui | */.local/bin/lizarbe-update)
         # Copias o enlaces del Centro de antes del paquete lizarbe-centro.
@@ -222,11 +222,11 @@ check_legacy() {
 check_apps() {
   say "Aplicaciones de Lizarbe"
   local missing=() b
-  for b in lizarbe-escritorio lizarbe-widgets lizarbe-temas lizarbe; do
+  for b in lizarbe-escritorio lizarbe-widgets lizarbe-temas lizarbe-tienda lizarbe; do
     command -v "$b" >/dev/null || missing+=("$b")
   done
   if [[ ${#missing[@]} -eq 0 ]]; then
-    ok "Escritorio, Widgets, Estudio de temas y Centro instalados"
+    ok "Escritorio, Widgets, Estudio de temas, Tienda y Centro instalados"
   else
     bad "faltan ${missing[*]} (instala el metapaquete: sudo pacman -S lizarbe)"
   fi

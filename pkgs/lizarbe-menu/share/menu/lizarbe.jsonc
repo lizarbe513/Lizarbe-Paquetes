@@ -185,6 +185,12 @@
     "when": "[[ -f ~/.config/hypr/input.lua ]]",
     "action": "omarchy-launch-config-editor \"$HOME/.config/hypr/input.lua\""
   },
+  "install.package": {
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-tienda lizarbe-tienda"
+  },
+  "install.aur": {
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-tienda lizarbe-tienda --fuente aur"
+  },
   "style.hyprland": {
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section apariencia"
   },
