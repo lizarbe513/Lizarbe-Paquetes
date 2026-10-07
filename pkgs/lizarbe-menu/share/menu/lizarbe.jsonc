@@ -1,4 +1,20 @@
 {
+  "kdeconnect": {
+    "icon": "\udb80\udd1c",
+    "label": {
+      "es": "KDE Connect",
+      "en": "KDE Connect"
+    },
+    "aliases": [
+      "kdeconnect",
+      "phone"
+    ],
+    "description": {
+      "es": "Vincular tu celular: notificaciones, archivos y portapapeles",
+      "en": "Link your phone: notifications, files and clipboard"
+    },
+    "action": "uwsm-app -- lizarbe-kdeconnect"
+  },
   "lizarbe": {
     "icon": "\udb82\udcc6",
     "label": {
@@ -108,18 +124,6 @@
   },
   "setup.lz-network": {
     "like": "setup.network"
-  },
-  "setup.phone": {
-    "icon": "\udb80\udd1c",
-    "label": {
-      "es": "KDE Connect",
-      "en": "KDE Connect"
-    },
-    "description": {
-      "es": "Vincular tu celular: notificaciones, archivos y portapapeles",
-      "en": "Link your phone: notifications, files and clipboard"
-    },
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe lizarbe-tui --section kdeconnect"
   },
   "setup.lz-default": {
     "like": "setup.default"

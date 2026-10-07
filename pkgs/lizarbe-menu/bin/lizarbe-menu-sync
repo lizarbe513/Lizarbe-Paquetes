@@ -36,6 +36,7 @@ LEGACY_IDS = [
     "setup.config.quickshell",
     "setup.widgets",
     "setup.escritorio",
+    "setup.phone",
     "lizarbe.pantallas",
     "lizarbe.atajos",
     "lizarbe.teclado",
