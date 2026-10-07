@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-ajustes
-pkgver=0.6.0
+pkgver=0.6.1
 pkgrel=1
 pkgdesc='Escritorio, Widgets y Estudio de temas: paneles TUI para configurar Hyprland, la barra y los temas de Omarchy'
 arch=('x86_64')
