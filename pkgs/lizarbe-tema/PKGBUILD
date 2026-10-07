@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-tema
-pkgver=0.3.0
+pkgver=0.3.1
 pkgrel=1
 pkgdesc='Identidad Lizarbe: temas de Omarchy, iconos Lizarbe-Red, tema GTK Darky, branding, fastfetch y starship'
 arch=('any')
