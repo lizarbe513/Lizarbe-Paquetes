@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-tema
-pkgver=0.4.0
+pkgver=0.4.1
 pkgrel=1
 pkgdesc='Identidad Lizarbe: temas de Omarchy, iconos Lizarbe-Red, tema GTK Darky, branding, fastfetch y starship'
 arch=('any')
@@ -19,9 +19,9 @@ sha256sums=('SKIP'
 package() {
   cd "$srcdir/lizarbe-centro"
 
-  # Temas de Omarchy (oscuro y claro).
+  # Temas de Omarchy (oscuro, claro y arena).
   install -d "$pkgdir/usr/share/omarchy/themes"
-  cp -r config/omarchy/themes/lizarbe config/omarchy/themes/lizarbe-light "$pkgdir/usr/share/omarchy/themes/"
+  cp -r config/omarchy/themes/lizarbe config/omarchy/themes/lizarbe-light config/omarchy/themes/lizarbe-arena "$pkgdir/usr/share/omarchy/themes/"
 
   # Branding (about, logo y salvapantallas).
   install -d "$pkgdir/usr/share/omarchy/branding"
