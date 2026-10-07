@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-tema
-pkgver=0.4.1
+pkgver=0.4.3
 pkgrel=1
 pkgdesc='Identidad Lizarbe: temas de Omarchy, iconos Lizarbe-Red, tema GTK Darky, branding, fastfetch y starship'
 arch=('any')
@@ -14,7 +14,7 @@ options=('!strip')
 source=("lizarbe-centro::git+$url.git#tag=v$pkgver"
         'provision-owner.conf')
 sha256sums=('SKIP'
-            'SKIP')
+            '0958cea2dd11f8c159b3e24aefc063db0def645a16a388ea18d378003df2288a')
 
 package() {
   cd "$srcdir/lizarbe-centro"

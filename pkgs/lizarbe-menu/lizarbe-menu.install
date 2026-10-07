@@ -4,6 +4,14 @@
 post_install() { _lizarbe_system; }
 post_upgrade() { _lizarbe_system; }
 
+# Al quitar el paquete se va /etc/pacman.d/lizarbe.conf: hay que quitar también
+# su Include de pacman.conf, o pacman dejaría de funcionar.
+post_remove() {
+  if [ -f /etc/pacman.conf ] && [ ! -e /etc/pacman.d/lizarbe.conf ]; then
+    sed -i '\|^Include = /etc/pacman\.d/lizarbe\.conf$|d' /etc/pacman.conf
+  fi
+}
+
 _lizarbe_system() {
   # Hook de pacman de versiones anteriores: corría como root y no actualizaba nada.
   rm -f /etc/pacman.d/hooks/00-lizarbe-update.hook

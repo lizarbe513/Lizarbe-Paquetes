@@ -267,6 +267,20 @@ def build(current: str, entries: dict, remove: bool) -> str:
     return text[: m.end()] + "\n" + block + text[m.end() :]
 
 
+def prune_backups(path: str, keep: int = 3) -> None:
+    """Deja solo las `keep` copias `<archivo>.bak.<fecha>` más recientes."""
+    folder, name = os.path.split(path)
+    pattern = re.compile(re.escape(name) + r"\.bak\.(\d+)$")
+    found = sorted(
+        (int(m.group(1)), f) for f in os.listdir(folder or ".") if (m := pattern.match(f))
+    )
+    for _, f in found[:-keep]:
+        try:
+            os.remove(os.path.join(folder, f))
+        except OSError:
+            pass
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--check", action="store_true", help="solo comprobar; sale con 1 si hay cambios")
@@ -321,6 +335,7 @@ def main() -> int:
     os.makedirs(os.path.dirname(a.file), exist_ok=True)
     if current:
         shutil.copy2(a.file, f"{a.file}.bak.{int(time.time())}")
+        prune_backups(a.file)
     tmp = a.file + ".lizarbe.tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         f.write(new)

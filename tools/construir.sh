@@ -17,6 +17,8 @@ pkgs=("$@")
 
 for p in "${pkgs[@]}"; do
   echo ":: Construyendo $p"
+  # La firma vieja de una versión reconstruida ya no vale: se vuelve a firmar.
+  rm -f "$OUT/$p"-[0-9]*.pkg.tar.zst.sig
   (cd "$AQUI/pkgs/$p" && PKGDEST="$OUT" SRCDEST="${TMPDIR:-/tmp}/lizarbe-src" BUILDDIR="${TMPDIR:-/tmp}/lizarbe-build" makepkg -f --nodeps --noconfirm)
 done
 

@@ -165,20 +165,27 @@ check_legacy() {
   say "Restos de versiones anteriores"
   local found=0 f
   # Meca y copias de desarrollo que ahora trae un paquete (ya están en /usr/bin).
+  local apps="$HOME/.local/share/applications"
   for f in "$HOME/.local/bin/meca" "$HOME/.local/bin/meca-hyprconfig" "$HOME/.local/bin/meca-qs" \
-    "$HOME/.local/bin/lizarbe-escritorio" "$HOME/.local/bin/lizarbe-widgets" "$HOME/.local/bin/lizarbe-hypr-rules" \
-    "$HOME/.local/share/applications/meca.desktop" "$HOME/.local/share/applications/meca-qs.desktop" \
-    "$HOME/.local/share/applications/lizarbe-escritorio.desktop" "$HOME/.local/share/applications/lizarbe-widgets.desktop" \
+    "$HOME/.local/bin/lizarbe-escritorio" "$HOME/.local/bin/lizarbe-widgets" "$HOME/.local/bin/lizarbe-temas" \
+    "$HOME/.local/bin/lizarbe-hypr-rules" \
+    "$HOME/.local/bin/lizarbe" "$HOME/.local/bin/lizarbe-tui" "$HOME/.local/bin/lizarbe-update" \
+    "$apps/meca.desktop" "$apps/meca-qs.desktop" "$apps/lizarbe.desktop" \
+    "$apps/lizarbe-escritorio.desktop" "$apps/lizarbe-widgets.desktop" "$apps/lizarbe-temas.desktop" \
     "$HOOKS_DIR/post-update.d/99-meca-hyprconfig.sh" \
     "$HOOKS_DIR/post-update.d/00-lizarbe-update.hook"; do
     # Solo si el paquete ya trae el programa (no se quita lo único que hay).
     case $f in
-      */.local/bin/lizarbe-escritorio | */.local/bin/lizarbe-widgets)
+      */.local/bin/lizarbe-escritorio | */.local/bin/lizarbe-widgets | */.local/bin/lizarbe-temas)
         [[ -x /usr/bin/${f##*/} ]] || continue ;;
+      */.local/bin/lizarbe | */.local/bin/lizarbe-tui | */.local/bin/lizarbe-update)
+        # Copias o enlaces del Centro de antes del paquete lizarbe-centro.
+        [[ -x /usr/bin/lizarbe && -x /usr/bin/lizarbe-tui ]] || continue ;;
       */post-update.d/00-lizarbe-update.hook)
         # El hook viejo actualizaba por git; ahora actualiza pacman (paquete lizarbe-centro).
         [[ -x /usr/bin/lizarbe && -f /usr/lib/lizarbe-centro/install.sh ]] || continue ;;
-      */.local/share/applications/lizarbe-escritorio.desktop | */.local/share/applications/lizarbe-widgets.desktop)
+      "$apps"/lizarbe*.desktop)
+        # Una copia en el usuario tapa la del paquete en el lanzador.
         [[ -f /usr/share/applications/${f##*/} ]] || continue ;;
     esac
     if [[ -e $f || -L $f ]]; then
@@ -209,6 +216,33 @@ check_legacy() {
     bad "quedan archivos del instalador viejo (los reemplazan los paquetes). Quítalos con: sudo rm -rf ${root_left[*]}"
   fi
   [[ $found -eq 0 ]] && ok "sin restos"
+}
+
+# ---------------------------------------------------------------- aplicaciones
+check_apps() {
+  say "Aplicaciones de Lizarbe"
+  local missing=() b
+  for b in lizarbe-escritorio lizarbe-widgets lizarbe-temas lizarbe; do
+    command -v "$b" >/dev/null || missing+=("$b")
+  done
+  if [[ ${#missing[@]} -eq 0 ]]; then
+    ok "Escritorio, Widgets, Estudio de temas y Centro instalados"
+  else
+    bad "faltan ${missing[*]} (instala el metapaquete: sudo pacman -S lizarbe)"
+  fi
+  # Capturas (Escritorio): el bloque de ~/.config/uwsm/env apunta a una carpeta
+  # y a un editor; si no existen, la tecla de captura no hará lo esperado.
+  local env="$HOME/.config/uwsm/env" dir editor
+  if [[ -f $env ]] && grep -q '^# >>> lizarbe capturas' "$env"; then
+    dir=$(sed -n 's/^export OMARCHY_SCREENSHOT_DIR="\(.*\)"$/\1/p' "$env" | tail -1)
+    editor=$(sed -n 's/^export OMARCHY_SCREENSHOT_EDITOR="\(.*\)"$/\1/p' "$env" | tail -1)
+    [[ -n $dir && ! -d $dir ]] && say "  \033[33m!\033[0m la carpeta de capturas no existe todavía ($dir): se creará con la primera captura"
+    if [[ -n $editor ]] && ! command -v "$editor" >/dev/null; then
+      bad "el editor de capturas elegido no está instalado: $editor (cámbialo en Escritorio › Capturas)"
+    else
+      ok "capturas configuradas"
+    fi
+  fi
 }
 
 # ---------------------------------------------------------------- archivos de Omarchy
@@ -250,6 +284,7 @@ check_menu
 check_rules
 check_hooks
 check_legacy
+check_apps
 check_omarchy_files
 check_repo
 

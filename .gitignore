@@ -2,5 +2,7 @@ src/
 pkg/
 *.pkg.tar.*
 dist/
+__pycache__/
+*.pyc
 pkgs/*/lizarbe-centro/
 pkgs/*/Lizarbe-*/

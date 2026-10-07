@@ -1,13 +1,15 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-ajustes
-pkgver=0.6.1
+pkgver=0.7.0
 pkgrel=1
 pkgdesc='Escritorio, Widgets y Estudio de temas: paneles TUI para configurar Hyprland, la barra y los temas de Omarchy'
 arch=('x86_64')
 url='https://github.com/lizarbe513/Lizarbe-Ajustes'
 license=('MIT')
 depends=('omarchy' 'gcc-libs')
-optdepends=('grim: captura automática de la vista previa de un tema')
+optdepends=('grim: captura automática de la vista previa de un tema'
+            'satty: editor de capturas alternativo'
+            'swappy: editor de capturas alternativo')
 makedepends=('cargo' 'git')
 options=('!debug')
 source=("$pkgname::git+$url.git#tag=v$pkgver")
