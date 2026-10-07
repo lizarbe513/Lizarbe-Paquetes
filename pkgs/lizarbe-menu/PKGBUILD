@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-menu
-pkgver=0.5.1
+pkgver=0.6.0
 pkgrel=1
 pkgdesc='Menú, reglas de ventana y hooks de Lizarbe para Omarchy (incluye lizarbe-doctor)'
 arch=('any')

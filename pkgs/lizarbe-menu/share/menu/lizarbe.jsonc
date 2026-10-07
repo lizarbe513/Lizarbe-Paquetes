@@ -174,14 +174,14 @@
   "style.temas": {
     "icon": "\udb80\udfd8",
     "label": {
-      "es": "Mis temas",
-      "en": "My Themes"
+      "es": "Crear tema",
+      "en": "New Theme"
     },
     "description": {
-      "es": "Crear y editar temas de color",
-      "en": "Create and edit color themes"
+      "es": "Crear y editar temas completos: colores, fondos, iconos y m\u00e1s",
+      "en": "Create and edit complete themes: colors, wallpapers, icons and more"
     },
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section temas"
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-temas lizarbe-temas"
   },
   "style.widgets": {
     "icon": "\udb81\udd6e",
