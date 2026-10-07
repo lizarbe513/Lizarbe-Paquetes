@@ -58,6 +58,23 @@
     },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section luz"
   },
+  "setup.screenshots": {
+    "icon": "\udb83\ude51",
+    "label": {
+      "es": "Capturas",
+      "en": "Screenshots"
+    },
+    "description": {
+      "es": "Carpeta, tecla de captura y qu\u00e9 hacer con ellas",
+      "en": "Folder, capture key and what to do with them"
+    },
+    "aliases": [
+      "screenshots",
+      "capturas",
+      "print"
+    ],
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section capturas"
+  },
   "setup.compose": {
     "icon": "\udb81\uddca",
     "label": {
