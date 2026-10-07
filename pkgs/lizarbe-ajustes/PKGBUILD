@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-ajustes
-pkgver=0.8.0
+pkgver=0.8.1
 pkgrel=1
 pkgdesc='Escritorio, Widgets, Estudio de temas y Tienda: paneles TUI para configurar Omarchy e instalar aplicaciones'
 arch=('x86_64')
