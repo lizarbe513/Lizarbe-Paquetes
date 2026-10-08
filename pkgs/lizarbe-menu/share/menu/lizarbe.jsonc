@@ -75,6 +75,23 @@
     ],
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-escritorio lizarbe-escritorio --section capturas"
   },
+  "setup.notifications": {
+    "icon": "\udb80\udc9a",
+    "label": {
+      "es": "Notificaciones",
+      "en": "Notifications"
+    },
+    "description": {
+      "es": "No molestar y qui\u00e9n muestra los avisos",
+      "en": "Do not disturb and what shows the notices"
+    },
+    "aliases": [
+      "notifications",
+      "notificaciones",
+      "avisos"
+    ],
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets --section notificaciones"
+  },
   "setup.compose": {
     "icon": "\udb81\uddca",
     "label": {

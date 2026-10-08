@@ -252,6 +252,25 @@ check_apps() {
   fi
 }
 
+# ---------------------------------------------------------------- notificaciones
+# Si swaync puede arrancar, a veces les gana el puesto al shell de Omarchy y los
+# avisos salen con otro estilo. Solo se avisa: la decisión es del usuario
+# (Widgets y barra › Notificaciones).
+check_notifications() {
+  say "Notificaciones"
+  command -v busctl >/dev/null && command -v swaync >/dev/null || { ok "sin otros programas de avisos"; return; }
+  local owner blocked=0
+  [[ -f $HOME/.local/share/dbus-1/services/org.freedesktop.Notifications.service ]] && blocked=1
+  owner=$(busctl --user status org.freedesktop.Notifications 2>/dev/null | sed -n 's/^Comm=//p')
+  if [[ $blocked -eq 1 && ${owner:-quickshell} == quickshell ]]; then
+    ok "los avisos los muestra el shell de Omarchy"
+  elif [[ -n $owner && $owner != quickshell ]]; then
+    say "  \033[33m!\033[0m los avisos los muestra «$owner», no el shell de Omarchy (estilos mezclados). Arréglalo en Widgets y barra › Notificaciones"
+  else
+    say "  \033[33m!\033[0m swaync está instalado y puede mezclar el estilo de los avisos. Puedes bloquearlo en Widgets y barra › Notificaciones"
+  fi
+}
+
 # ---------------------------------------------------------------- archivos de Omarchy
 check_omarchy_files() {
   say "Archivos de Omarchy"
@@ -292,6 +311,7 @@ check_rules
 check_hooks
 check_legacy
 check_apps
+check_notifications
 check_omarchy_files
 check_repo
 
