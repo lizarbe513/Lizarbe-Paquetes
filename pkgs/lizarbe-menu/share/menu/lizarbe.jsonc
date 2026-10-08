@@ -30,6 +30,25 @@
     },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe lizarbe-tui"
   },
+  "learn.bienvenida": {
+    "icon": "\udb81\udcce",
+    "label": {
+      "es": "Bienvenida",
+      "en": "Welcome"
+    },
+    "description": {
+      "es": "Gu\u00eda de primer inicio: atajos, tel\u00e9fono, temas y m\u00e1s",
+      "en": "First-run guide: shortcuts, phone, themes and more"
+    },
+    "aliases": [
+      "welcome",
+      "bienvenida",
+      "tour",
+      "guia",
+      "empezar"
+    ],
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-bienvenida lizarbe-bienvenida"
+  },
   "system": {
     "when": "false",
     "aliases": []

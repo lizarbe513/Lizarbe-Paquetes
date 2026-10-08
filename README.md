@@ -7,8 +7,8 @@ y se actualizan con `omarchy update`.
 | Paquete | Origen | Qué trae |
 | :--- | :--- | :--- |
 | `lizarbe` | aquí | Metapaquete: instala todo lo de abajo. |
-| `lizarbe-menu` | aquí | Entradas de Lizarbe en el menú de Omarchy (ES/EN), reglas de ventana, hooks de Omarchy, `lizarbe-doctor`, `lizarbe-menu-sync`, KDE Connect. |
-| `lizarbe-ajustes` | [Lizarbe-Ajustes](https://github.com/lizarbe513/Lizarbe-Ajustes) | **Escritorio**, **Widgets** y **Estudio de temas** (TUIs en Rust). |
+| `lizarbe-menu` | aquí | Entradas de Lizarbe en el menú de Omarchy (ES/EN), reglas de ventana, hooks de Omarchy (entre ellos el que abre la Bienvenida en el primer inicio), `lizarbe-doctor`, `lizarbe-menu-sync`, KDE Connect. |
+| `lizarbe-ajustes` | [Lizarbe-Ajustes](https://github.com/lizarbe513/Lizarbe-Ajustes) | **Escritorio**, **Widgets**, **Estudio de temas**, **Tienda** y **Bienvenida** (TUIs en Rust). |
 | `lizarbe-centro` | [Lizarbe-Omarchy-Config](https://github.com/lizarbe513/Lizarbe-Omarchy-Config) | **Centro Lizarbe** (`lizarbe`): identidad, suites de software y actualizaciones. |
 | `lizarbe-tema` | [Lizarbe-Omarchy-Config](https://github.com/lizarbe513/Lizarbe-Omarchy-Config) | Temas `lizarbe`, `lizarbe-light` y `lizarbe-arena`, iconos, GTK, branding, fastfetch y starship. |
 | `lizarbe-keyring` | aquí | Llave pública con la que se firman los paquetes. |

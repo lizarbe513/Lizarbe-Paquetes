@@ -1,13 +1,13 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-menu
-pkgver=0.9.0
+pkgver=1.0.0
 pkgrel=1
 pkgdesc='Menú, reglas de ventana y hooks de Lizarbe para Omarchy (incluye lizarbe-doctor)'
 arch=('any')
 url='https://github.com/lizarbe513/Lizarbe-Paquetes'
 license=('MIT')
-# Las entradas del menú abren apps de lizarbe-ajustes (Capturas, Crear tema: 0.6.0+).
-depends=('python' 'bash' 'omarchy' 'lizarbe-ajustes>=0.9.0')
+# Las entradas del menú abren apps de lizarbe-ajustes (Capturas, Crear tema, Bienvenida: 1.0.0+).
+depends=('python' 'bash' 'omarchy' 'lizarbe-ajustes>=1.0.0')
 backup=('etc/pacman.d/lizarbe.conf')
 install=lizarbe-menu.install
 source=()
@@ -23,6 +23,8 @@ package() {
   install -Dm644 share/menu/i18n/es.json "$pkgdir/usr/share/lizarbe/menu/i18n/es.json"
   install -Dm644 share/hypr/reglas.lua "$pkgdir/usr/share/lizarbe/hypr/reglas.lua"
   install -Dm644 etc/lizarbe.conf "$pkgdir/etc/pacman.d/lizarbe.conf"
+  # Usuarios nuevos ven la Bienvenida en su primer inicio (la app quita esta marca al terminar).
+  install -Dm644 /dev/null "$pkgdir/etc/skel/.config/lizarbe/bienvenida-pendiente"
   local h
   for h in share/hooks/*/*.sh; do
     local rel=${h#share/hooks/}
