@@ -271,6 +271,34 @@ check_notifications() {
   fi
 }
 
+# ---------------------------------------------------------------- escala
+# La plantilla de monitors.lua trae GDK_SCALE=2 aunque la pantalla use 1: con
+# force_zero_scaling, Steam y los launchers de Java/GTK se ven gigantes.
+# GDK_SCALE debe ser la escala real redondeada (lo mismo que hace Escritorio).
+fix_gdk_scale() { # archivo escala
+  backup_once "$1" && sed -i "s/^local omarchy_gdk_scale = .*/local omarchy_gdk_scale = $2/" "$1"
+}
+
+check_scale() {
+  say "Escala de apps"
+  local file=$HOME/.config/hypr/monitors.lua have scale want
+  have=$(sed -n 's/^local omarchy_gdk_scale = //p' "$file" 2>/dev/null)
+  [[ -n $have ]] && command -v hyprctl >/dev/null && command -v jq >/dev/null ||
+    { ok "sin escala general que revisar"; return; }
+  scale=$(sed -n 's/^local omarchy_monitor_scale = //p' "$file" | tr -d '"')
+  if [[ ! $scale =~ ^[0-9.]+$ ]]; then
+    scale=$(hyprctl monitors -j 2>/dev/null | jq -r '[.[].scale] | max // empty')
+    [[ -n $scale ]] || { ok "sin pantallas que revisar"; return; }
+  fi
+  want=$(awk -v s="$scale" 'BEGIN { r = int(s + 0.5); print (r < 1 ? 1 : r) }')
+  if [[ $have == "$want" ]]; then
+    ok "GDK_SCALE ($have) sigue a la escala de la pantalla"
+  else
+    problem "GDK_SCALE es $have pero la pantalla usa $scale: Steam y apps XWayland se verán mal (vuelve a iniciar sesión tras arreglarlo)" \
+      fix_gdk_scale "$file" "$want"
+  fi
+}
+
 # ---------------------------------------------------------------- archivos de Omarchy
 check_omarchy_files() {
   say "Archivos de Omarchy"
@@ -312,6 +340,7 @@ check_hooks
 check_legacy
 check_apps
 check_notifications
+check_scale
 check_omarchy_files
 check_repo
 
