@@ -1,6 +1,6 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-ajustes
-pkgver=1.2.0
+pkgver=1.4.1
 pkgrel=1
 pkgdesc='Escritorio, Widgets, Estudio de temas, Tienda y Bienvenida: paneles TUI para configurar Omarchy, instalar aplicaciones y aprender a usarlo'
 arch=('x86_64')
@@ -25,7 +25,7 @@ prepare() {
 build() {
   cd "$pkgname"
   export RUSTUP_TOOLCHAIN=stable CARGO_TARGET_DIR=target
-  cargo build --release --frozen -p lizarbe-escritorio -p lizarbe-widgets -p lizarbe-temas -p lizarbe-tienda -p lizarbe-bienvenida
+  cargo build --release --frozen -p lizarbe-escritorio -p lizarbe-widgets -p lizarbe-temas -p lizarbe-tienda -p lizarbe-bienvenida -p lizarbe-recibir
 }
 
 package() {
@@ -35,9 +35,11 @@ package() {
   install -Dm755 target/release/lizarbe-temas "$pkgdir/usr/bin/lizarbe-temas"
   install -Dm755 target/release/lizarbe-tienda "$pkgdir/usr/bin/lizarbe-tienda"
   install -Dm755 target/release/lizarbe-bienvenida "$pkgdir/usr/bin/lizarbe-bienvenida"
+  install -Dm755 target/release/lizarbe-recibir "$pkgdir/usr/bin/lizarbe-recibir"
   install -Dm644 crates/escritorio/lizarbe-escritorio.desktop "$pkgdir/usr/share/applications/lizarbe-escritorio.desktop"
   install -Dm644 crates/widgets/lizarbe-widgets.desktop "$pkgdir/usr/share/applications/lizarbe-widgets.desktop"
   install -Dm644 crates/temas/lizarbe-temas.desktop "$pkgdir/usr/share/applications/lizarbe-temas.desktop"
   install -Dm644 crates/tienda/lizarbe-tienda.desktop "$pkgdir/usr/share/applications/lizarbe-tienda.desktop"
   install -Dm644 crates/bienvenida/lizarbe-bienvenida.desktop "$pkgdir/usr/share/applications/lizarbe-bienvenida.desktop"
+  install -Dm644 crates/recibir/lizarbe-recibir.desktop "$pkgdir/usr/share/applications/lizarbe-recibir.desktop"
 }

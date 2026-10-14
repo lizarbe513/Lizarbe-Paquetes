@@ -224,6 +224,9 @@
   "install.package": {
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-tienda lizarbe-tienda"
   },
+  "remove.package": {
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-tienda lizarbe-tienda --quitar"
+  },
   "install.aur": {
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-tienda lizarbe-tienda --fuente aur"
   },
@@ -253,5 +256,17 @@
       "en": "Top bar and widgets"
     },
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-widgets lizarbe-widgets"
+  },
+  "trigger.share.clipboard": {
+    "action": "lizarbe-share clipboard"
+  },
+  "trigger.share.file": {
+    "action": "lizarbe-share file"
+  },
+  "trigger.share.folder": {
+    "action": "lizarbe-share folder"
+  },
+  "trigger.share.receive": {
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-recibir lizarbe-recibir"
   }
 }

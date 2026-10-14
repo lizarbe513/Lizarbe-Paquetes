@@ -10,6 +10,7 @@ if o and o.window then
   o.window("org.omarchy.lizarbe-bienvenida", { tag = "-default-opacity" })
   o.window("org.omarchy.lizarbe-bienvenida", { opacity = "1 1" })
   o.window("org.omarchy.lizarbe", { float = true, center = true, size = { 680, 960 } })
+  o.window("org.omarchy.lizarbe-recibir", { tag = "-floating-window", float = true, center = true, size = { 1180, 860 } })
   o.window("org.kde.kdeconnect.app", { float = true, center = true, size = { 680, 960 } })
   o.window("org.kde.kdeconnect-indicator", { float = true, center = true, size = { 680, 960 } })
 

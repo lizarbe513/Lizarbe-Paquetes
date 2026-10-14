@@ -2,6 +2,9 @@
 # Muestra la Bienvenida de Lizarbe una sola vez, en el primer inicio de un usuario
 # nuevo. La marca ~/.config/lizarbe/bienvenida-pendiente la siembra /etc/skel (y la
 # ISO); la propia Bienvenida la quita al terminar, salvo que se pida volver a verla.
+# Desactivado temporalmente mientras se rediseña la pantalla de bienvenida.
+exit 0
+
 marca="$HOME/.config/lizarbe/bienvenida-pendiente"
 [[ -f $marca ]] || exit 0
 command -v lizarbe-bienvenida >/dev/null || exit 0

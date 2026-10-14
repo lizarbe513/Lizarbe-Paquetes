@@ -1,0 +1,92 @@
+#!/bin/bash
+# Compartir portapapeles, archivos o carpetas con el teléfono vía KDE Connect.
+# Misma interfaz que omarchy-menu-share (que usa LocalSend).
+# Uso: lizarbe-share <clipboard|file|folder> [ruta...]
+
+if (($# == 0)); then
+  echo "Uso: lizarbe-share [clipboard|file|folder] [ruta...]"
+  exit 1
+fi
+
+MODE="$1"
+shift
+
+aviso() { omarchy-notification-send -g "" "$@"; }
+
+if ! command -v kdeconnect-cli >/dev/null; then
+  aviso -u critical "No se pudo compartir" "KDE Connect no está instalado"
+  exit 1
+fi
+
+# Dispositivo: el único conectado, o elegir si hay varios.
+readarray -t DEVICES < <(kdeconnect-cli -a --id-name-only 2>/dev/null)
+if ((${#DEVICES[@]} == 0)); then
+  aviso -u critical "No hay ningún teléfono conectado" "Abre KDE Connect y vincula tu teléfono"
+  uwsm-app -- lizarbe-kdeconnect &
+  exit 1
+elif ((${#DEVICES[@]} == 1)); then
+  DEVICE="${DEVICES[0]}"
+else
+  NAMES=()
+  for d in "${DEVICES[@]}"; do NAMES+=("${d#* }"); done
+  name=$(omarchy-menu-select "Compartir con" "${NAMES[@]}") || exit 0
+  for d in "${DEVICES[@]}"; do [[ ${d#* } == "$name" ]] && DEVICE="$d"; done
+  [[ -n $DEVICE ]] || exit 0
+fi
+ID="${DEVICE%% *}"
+NAME="${DEVICE#* }"
+
+if [[ $MODE == "clipboard" ]]; then
+  text=$(wl-paste 2>/dev/null)
+  [[ -n $text ]] || { aviso "Nada que compartir" "El portapapeles está vacío"; exit 0; }
+  kdeconnect-cli -d "$ID" --share-text "$text" >/dev/null &&
+    aviso "Portapapeles enviado" "a $NAME"
+  exit
+fi
+
+if (($# > 0)); then
+  FILE_ARRAY=("$@")
+else
+  if [[ $MODE == "folder" ]]; then
+    select_args=(--title "Compartir carpeta" --directory)
+  else
+    select_args=(--title "Compartir archivos" --multiple)
+  fi
+
+  picked=$(omarchy-file-select "${select_args[@]}") || status=$?
+  if ((${status:-0} > 1)); then
+    aviso -u critical "No se pudo compartir" "No se abrió el selector de archivos"
+    exit 1
+  fi
+  [[ -n $picked ]] || exit 0
+  readarray -t FILE_ARRAY <<<"$picked"
+fi
+
+# KDE Connect no envía carpetas: se comprimen en un .zip temporal.
+SEND=()
+for f in "${FILE_ARRAY[@]}"; do
+  if [[ -d $f ]]; then
+    f=${f%/}
+    zip="${XDG_RUNTIME_DIR:-/tmp}/$(basename "$f").zip"
+    bsdtar -a -cf "$zip" -C "$(dirname "$f")" "$(basename "$f")" || {
+      aviso -u critical "No se pudo compartir" "No se pudo comprimir $(basename "$f")"
+      exit 1
+    }
+    SEND+=("$zip")
+  else
+    SEND+=("$(realpath "$f")")
+  fi
+done
+
+for f in "${SEND[@]}"; do
+  kdeconnect-cli -d "$ID" --share "$f" >/dev/null || {
+    aviso -u critical "No se pudo compartir" "$(basename "$f")"
+    exit 1
+  }
+done
+
+if ((${#SEND[@]} == 1)); then
+  aviso "Enviado a $NAME" "$(basename "${SEND[0]}")"
+else
+  aviso "Enviado a $NAME" "${#SEND[@]} archivos"
+fi
