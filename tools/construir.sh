@@ -28,7 +28,9 @@ for f in *.pkg.tar.zst; do
   [[ -f $f.sig ]] || gpg --batch --yes --detach-sign --local-user "$KEY" -o "$f.sig" "$f"
 done
 rm -f lizarbe.db* lizarbe.files*
-repo-add --quiet --sign --key "$KEY" --new lizarbe.db.tar.gz ./*.pkg.tar.zst
+# Orden por versión (no alfabético): si no, 1.0.0-9 entra después de 1.0.0-10 y la pisa.
+mapfile -t paquetes < <(printf '%s\n' *.pkg.tar.zst | sort -V)
+repo-add --quiet --sign --key "$KEY" --new lizarbe.db.tar.gz "${paquetes[@]}"
 # Quitar los paquetes viejos que la base de datos ya no lista.
 mapfile -t vigentes < <(tar -xzOf lizarbe.db.tar.gz --wildcards '*/desc' | awk '/^%FILENAME%$/ {getline; print}')
 for f in *.pkg.tar.zst; do

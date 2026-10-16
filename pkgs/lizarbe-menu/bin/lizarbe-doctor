@@ -299,6 +299,27 @@ check_scale() {
   fi
 }
 
+# ---------------------------------------------------------------- iconos
+# Vantablack y White piden Yaru-gray/Yaru-grey, que el yaru-icon-theme de Arch no
+# trae: Archivos pierde iconos (Destacados, Papelera) y la bandeja de la barra
+# muestra el cuadro magenta de nm-applet. Un alias que hereda de Yaru lo evita.
+write_icon_alias() { # nombre
+  mkdir -p "$HOME/.local/share/icons/$1" &&
+    printf '[Icon Theme]\nName=%s\nComment=Alias de Lizarbe (Arch no trae este Yaru)\nInherits=Yaru-dark,Yaru,breeze-dark,Adwaita,hicolor\nDirectories=\n' \
+      "$1" >"$HOME/.local/share/icons/$1/index.theme"
+}
+
+check_icons() {
+  say "Temas de iconos"
+  local name missing=0
+  for name in Yaru-gray Yaru-grey; do
+    [[ -e /usr/share/icons/$name/index.theme || -e $HOME/.local/share/icons/$name/index.theme ]] && continue
+    missing=1
+    problem "falta el tema de iconos $name (lo usan Vantablack/White)" write_icon_alias "$name"
+  done
+  [[ $missing -eq 0 ]] && ok "los temas de Omarchy encuentran sus iconos"
+}
+
 # ---------------------------------------------------------------- archivos de Omarchy
 check_omarchy_files() {
   say "Archivos de Omarchy"
@@ -341,6 +362,7 @@ check_legacy
 check_apps
 check_notifications
 check_scale
+check_icons
 check_omarchy_files
 check_repo
 
