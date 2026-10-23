@@ -261,7 +261,7 @@
       "es": "Crear y editar temas completos: colores, fondos, iconos y m\u00e1s",
       "en": "Create and edit complete themes: colors, wallpapers, icons and more"
     },
-    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-temas lizarbe-temas"
+    "action": "uwsm-app -- aether"
   },
   "style.widgets": {
     "icon": "\udb81\udd6e",
