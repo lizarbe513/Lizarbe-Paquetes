@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "lizarbe.modo-juego",
+  "name": "Modo juego",
+  "version": "1.0.0",
+  "author": "Lizarbe",
+  "license": "MIT",
+  "description": "Activa y desactiva el modo juego de Lizarbe desde la barra.",
+  "kinds": ["bar-widget"],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Modo juego",
+    "description": "Un clic quita animaciones y efectos, pone la energía al máximo y silencia los avisos. Otro clic lo deja todo como estaba.",
+    "category": "System",
+    "aliases": ["juego", "game", "gaming", "rendimiento"],
+    "allowMultiple": false
+  }
+}

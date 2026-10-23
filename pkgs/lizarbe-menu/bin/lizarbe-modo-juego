@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+# lizarbe-modo-juego — más rendimiento para jugar: Hyprland sin animaciones ni
+# efectos, perfil de energía al máximo, sin avisos y sin bloqueo de pantalla.
+# Al salir deja todo como estaba antes de activarlo.
+#
+# Uso: lizarbe-modo-juego [toggle|on|off|status]
+#   status sale con 0 si el modo juego está activo.
+set -uo pipefail
+
+SHARE="${LIZARBE_SHARE:-/usr/share/lizarbe}"
+FLAG="$HOME/.local/state/omarchy/toggles/hypr/lizarbe-modo-juego.lua"
+# Lo que había antes de activarlo: perfil de energía, No molestar (1/0), no dormir (1/0).
+STATE="$HOME/.local/state/lizarbe/modo-juego"
+DND_FILE="$HOME/.local/state/omarchy/notifications.json"
+AWAKE="$HOME/.local/state/omarchy/indicators/stay-awake"
+
+active() { [[ -f $FLAG ]]; }
+dnd_on() { [[ $(jq -r '.dnd // false' "$DND_FILE" 2>/dev/null) == true ]]; }
+has_profile() { omarchy-powerprofiles-list 2>/dev/null | grep -qx "$1"; }
+avisar() { notify-send -a "Modo juego" -i input-gaming "$1" "$2" 2>/dev/null || true; }
+
+reload_hypr() {
+  [[ -n ${HYPRLAND_INSTANCE_SIGNATURE:-} ]] || return 0
+  hyprctl reload >/dev/null 2>&1
+  # Solo cuenta un error en nuestro archivo; los de tu configuración no son cosa nuestra.
+  ! hyprctl configerrors 2>/dev/null | grep -q 'lizarbe-modo-juego'
+}
+
+refresh_bar() { omarchy-shell -q lizarbe.modo-juego refresh; }
+
+on() {
+  active && return 0
+  mkdir -p "$(dirname "$FLAG")" "$(dirname "$STATE")"
+  local profile dnd=0 awake=0
+  profile=$(powerprofilesctl get 2>/dev/null)
+  dnd_on && dnd=1
+  [[ -f $AWAKE ]] && awake=1
+  printf '%s\n%s\n%s\n' "$profile" "$dnd" "$awake" >"$STATE"
+
+  install -m644 "$SHARE/hypr/modo-juego.lua" "$FLAG" || { echo "No se encontró $SHARE/hypr/modo-juego.lua" >&2; exit 1; }
+  if ! reload_hypr; then
+    rm -f "$FLAG" "$STATE"
+    reload_hypr
+    echo "Hyprland rechazó el modo juego (mira: hyprctl configerrors)" >&2
+    exit 1
+  fi
+  # Directo con powerprofilesctl: omarchy-powerprofiles-set recordaría "performance" como tu perfil habitual.
+  has_profile performance && powerprofilesctl set performance
+  [[ $awake -eq 1 ]] || omarchy-toggle-idle stay-awake >/dev/null
+  # El aviso va antes de No molestar; después ya no se vería.
+  avisar "Modo juego activado" "Sin animaciones, energía al máximo y sin avisos."
+  [[ $dnd -eq 1 ]] || omarchy-toggle-notification-silencing
+  refresh_bar
+}
+
+off() {
+  active || [[ -f $STATE ]] || return 0
+  rm -f "$FLAG"
+  reload_hypr
+  local profile="" dnd=1 awake=1
+  [[ -f $STATE ]] && { read -r profile; read -r dnd; read -r awake; } <"$STATE"
+  [[ -n $profile ]] && has_profile "$profile" && powerprofilesctl set "$profile"
+  [[ $awake == 1 ]] || omarchy-toggle-idle allow-idle >/dev/null
+  [[ $dnd == 1 ]] || ! dnd_on || omarchy-toggle-notification-silencing
+  rm -f "$STATE"
+  avisar "Modo juego desactivado" "Todo vuelve a como estaba."
+  refresh_bar
+}
+
+case "${1:-toggle}" in
+  on) on ;;
+  off) off ;;
+  toggle) if active; then off; else on; fi ;;
+  status) active ;;
+  -h | --help) sed -n '2,7p' "$0" | sed 's/^# \{0,1\}//' ;;
+  *)
+    echo "Uso: lizarbe-modo-juego [toggle|on|off|status]" >&2
+    exit 2
+    ;;
+esac

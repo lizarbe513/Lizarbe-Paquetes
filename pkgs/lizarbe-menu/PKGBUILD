@@ -1,7 +1,7 @@
 # Maintainer: Lizarbe <lizarbe513>
 pkgname=lizarbe-menu
 pkgver=1.0.0
-pkgrel=10
+pkgrel=12
 pkgdesc='Menú, reglas de ventana y hooks de Lizarbe para Omarchy (incluye lizarbe-doctor)'
 arch=('any')
 url='https://github.com/lizarbe513/Lizarbe-Paquetes'
@@ -20,9 +20,13 @@ package() {
   install -Dm755 bin/lizarbe-kde-colors "$pkgdir/usr/bin/lizarbe-kde-colors"
   install -Dm755 bin/lizarbe-kdeconnect "$pkgdir/usr/bin/lizarbe-kdeconnect"
   install -Dm755 bin/lizarbe-share "$pkgdir/usr/bin/lizarbe-share"
+  install -Dm755 bin/lizarbe-modo-juego "$pkgdir/usr/bin/lizarbe-modo-juego"
   install -Dm644 share/menu/lizarbe.jsonc "$pkgdir/usr/share/lizarbe/menu/lizarbe.jsonc"
   install -Dm644 share/menu/i18n/es.json "$pkgdir/usr/share/lizarbe/menu/i18n/es.json"
   install -Dm644 share/hypr/reglas.lua "$pkgdir/usr/share/lizarbe/hypr/reglas.lua"
+  install -Dm644 share/hypr/modo-juego.lua "$pkgdir/usr/share/lizarbe/hypr/modo-juego.lua"
+  # Plugins de la barra: lizarbe-doctor los copia a ~/.config/omarchy/plugins/.
+  install -Dm644 -t "$pkgdir/usr/share/lizarbe/plugins/lizarbe.modo-juego" share/plugins/lizarbe.modo-juego/*
   install -Dm644 etc/lizarbe.conf "$pkgdir/etc/pacman.d/lizarbe.conf"
   # Usuarios nuevos ven la Bienvenida en su primer inicio (la app quita esta marca al terminar).
   install -Dm644 /dev/null "$pkgdir/etc/skel/.config/lizarbe/bienvenida-pendiente"

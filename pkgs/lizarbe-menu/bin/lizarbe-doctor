@@ -167,6 +167,32 @@ check_hooks() {
   done
 }
 
+# ---------------------------------------------------------------- plugins de la barra
+# Solo se copian: ponerlos en la barra es cosa del usuario (Widgets y barra).
+install_plugin() { # origen destino
+  mkdir -p "$2" && install -m644 "$1"/* "$2"/
+}
+
+check_plugins() {
+  say "Plugins de la barra"
+  local src id dest f stale
+  for src in "$SHARE"/plugins/*/; do
+    [[ -f $src/manifest.json ]] || continue
+    src=${src%/}
+    id=${src##*/}
+    dest="$HOME/.config/omarchy/plugins/$id"
+    stale=0
+    for f in "$src"/*; do
+      cmp -s "$f" "$dest/${f##*/}" || stale=1
+    done
+    if [[ $stale -eq 0 ]]; then
+      ok "$id"
+    else
+      problem "falta o está desactualizado el plugin $id" install_plugin "$src" "$dest"
+    fi
+  done
+}
+
 # ---------------------------------------------------------------- restos de versiones anteriores
 check_legacy() {
   say "Restos de versiones anteriores"
@@ -299,6 +325,43 @@ check_scale() {
   fi
 }
 
+# ---------------------------------------------------------------- teclado
+# Omarchy pone la tecla compuesta en Bloq Mayús, lo que estorba al escribir.
+# Lizarbe la pasa a la tecla Windows derecha y deja Bloq Mayús normal. Si ya
+# defines tus propias kb_options en input.lua, se respetan y no se toca nada.
+KB_BEGIN="-- >>> lizarbe: tecla compuesta"
+KB_END="-- <<< lizarbe: tecla compuesta"
+
+write_compose_key() {
+  local file=$HYPR_DIR/input.lua
+  mkdir -p "$HYPR_DIR" && touch "$file" || return 1
+  backup_once "$file"
+  sed -i "/^$KB_BEGIN/,/^$KB_END/d" "$file"
+  cat >>"$file" <<EOF
+
+$KB_BEGIN (quítalo si prefieres la de Omarchy)
+hl.config({
+  input = {
+    kb_options = "compose:rwin",
+  },
+})
+$KB_END
+EOF
+  RELOAD=1
+}
+
+check_compose_key() {
+  say "Teclado"
+  local file=$HYPR_DIR/input.lua
+  if grep -q "^$KB_BEGIN" "$file" 2>/dev/null; then
+    ok "tecla compuesta en la tecla Windows derecha"
+  elif grep -qE '^[^-]*kb_options' "$file" 2>/dev/null; then
+    ok "kb_options propias en input.lua (se respetan)"
+  else
+    problem "la tecla compuesta está en Bloq Mayús (estorba al escribir)" write_compose_key
+  fi
+}
+
 # ---------------------------------------------------------------- iconos
 # Vantablack y White piden Yaru-gray/Yaru-grey, que el yaru-icon-theme de Arch no
 # trae: Archivos pierde iconos (Destacados, Papelera) y la bandeja de la barra
@@ -358,10 +421,12 @@ say "Lizarbe Doctor"
 check_menu
 check_rules
 check_hooks
+check_plugins
 check_legacy
 check_apps
 check_notifications
 check_scale
+check_compose_key
 check_icons
 check_omarchy_files
 check_repo

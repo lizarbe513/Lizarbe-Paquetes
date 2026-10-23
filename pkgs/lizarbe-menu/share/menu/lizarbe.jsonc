@@ -49,6 +49,24 @@
     ],
     "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-bienvenida lizarbe-bienvenida"
   },
+  "trigger.toggle.game-mode": {
+    "icon": "󰊗",
+    "label": {
+      "es": "Modo juego",
+      "en": "Game Mode"
+    },
+    "description": {
+      "es": "Sin animaciones, energía al máximo y sin avisos",
+      "en": "No animations, full power and no notices"
+    },
+    "aliases": [
+      "game",
+      "gaming",
+      "juego",
+      "rendimiento"
+    ],
+    "action": "lizarbe-modo-juego toggle"
+  },
   "system": {
     "when": "false",
     "aliases": []
