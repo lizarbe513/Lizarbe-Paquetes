@@ -4,7 +4,7 @@ if o and o.window then
   o.window("org.omarchy.lizarbe-escritorio", { tag = "-floating-window", float = true, center = true, size = { 1120, 760 } })
   o.window("org.omarchy.lizarbe-widgets", { tag = "-floating-window", float = true, center = true, size = { 1120, 760 } })
   o.window("org.omarchy.lizarbe-tienda", { tag = "-floating-window", float = true, center = true, size = { 1120, 760 } })
-  o.window("org.omarchy.lizarbe-temas", { tag = "-floating-window", float = true, center = true, size = { 1280, 820 } })
+  o.window("org.omarchy.lizarbe-desbloqueo", { tag = "-floating-window", float = true, center = true, size = { 1280, 820 } })
   o.window("org.omarchy.lizarbe-bienvenida", { tag = "-floating-window", float = true, center = true, size = { 1280, 820 } })
   -- La Bienvenida va opaca: es una pantalla de presentación, no una ventana más.
   o.window("org.omarchy.lizarbe-bienvenida", { tag = "-default-opacity" })

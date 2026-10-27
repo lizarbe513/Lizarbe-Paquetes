@@ -263,6 +263,24 @@
     },
     "action": "uwsm-app -- aether"
   },
+  "style.desbloqueo": {
+    "icon": "\udb81\udff5",
+    "label": {
+      "es": "Crear tema de desbloqueo",
+      "en": "New Unlock Screen"
+    },
+    "description": {
+      "es": "Pantalla de desbloqueo del arranque con tu propio dibujo",
+      "en": "Boot unlock screen with your own drawing"
+    },
+    "aliases": [
+      "desbloqueo",
+      "unlock",
+      "plymouth",
+      "arranque"
+    ],
+    "action": "omarchy-launch-tui --app-id=org.omarchy.lizarbe-desbloqueo lizarbe-desbloqueo"
+  },
   "style.widgets": {
     "icon": "\udb81\udd6e",
     "label": {
